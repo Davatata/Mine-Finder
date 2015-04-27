@@ -1,0 +1,933 @@
+<!--
+    David Tataryan
+    CSCI 164 - Final Project
+    12-1-14
+
+
+    This program is a minesweeper game with a solver added to it.
+    The game can be played without the solver.
+
+    To run the game, open the file in your browser and start playing.
+    Tested only on Chrome and Mozilla. 
+
+    Solve button: will attempt to solve the game. 
+        It will either solve, lose, or get stuck
+
+    #Mines button: will let you change the number of mines. (1 <= n <= 100 ).
+        It will start a new game after change.
+
+    New game button: will end current game, randomize the board for a new game. 
+
+    I tested 40 games with 30 mines and 40 games with 40 mines. These are the results. 
+
+    30 mines (40 games)     40 mines (40 games)
+        W – 12.5 %               W – 60 %
+        L - 40   %               L - 15 %
+        S - 47.5 %               S - 25 %
+
+-->
+
+<html>
+<head>
+<title>SweeperSolver</title>
+</head>
+
+<body onload="newGame()">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+//document.write('<a href="http://mulan.csufresno.edu/~cs130s07/index.html">Homepage</a><br><br>');
+var numflags=0;
+var num_tiles = 0;
+var num_rows = 16;
+var num_cols = 16;
+var num_mines = 40;
+var tile_size = 24;
+var board = new Array(num_rows * num_cols);
+var visib = new Array(num_rows * num_cols);
+var where = new Array(num_rows * num_cols);
+var gameover=false;
+var myTimer;
+
+
+// Creates new game
+function newGame()
+{
+	clock = 0;
+	numflags=0;
+	num_tiles=0;
+	gameover = false;
+	clicked = false;
+	for(var i = 0; i < num_rows*num_cols; i++)
+	{
+		visib[i]= "tile";
+		board[i]= "0";
+		document.images[i].src = "http://mulan.csufresno.edu/~twilson/csci130/imgs/"+ visib[i] +".svg";
+	}
+
+	//set up 40 mines
+	for (var i = 0; i < num_mines; i++)
+	{
+		board[i]="mine";
+	}
+
+	//randomize the mines
+	for(var i = 0; i < num_rows*num_cols; i++)
+	{
+		var rand = Math.floor(Math.random()*(i+1));
+		var temp = board[rand];		
+		board[rand]= board[i];
+		board[i] = temp;
+	}
+	
+var start_time = new Date();
+	begin = start_time.getTime();
+	myTimer = setInterval(function(){updateTimer()},1000);
+	
+//call to set up mines
+	setboard();
+
+	document.getElementById("theflags").value = numflags + "/" + num_mines;
+}
+
+//sets up the numbers according to mine placement
+function setboard()
+{	
+	for( var i= 0; i<num_rows*num_cols; i++) where[i] = board[i];
+	where[0]="topleft"; where[15]="topright"; where[240]="bottomleft"; where[255]="bottomright";
+	for( var i= 1; i <15; i++) where[i] = "top";
+	for( var i= 16; i< 240; i+=16) where[i]= "left";
+	for( var i= 31; i< 255; i+=16) where[i]= "right";
+	for( var i= 241; i< 255; i++) where[i]= "bottom";
+	
+	for( var i= 0; i<num_rows*num_cols; i++)
+	{
+		if(board[i]=="mine")continue;
+		switch(where[i])
+		{
+			case "topleft": board[i]= check(i+1) + check(i+16) + check(i+17); break;
+			case "topright": board[i]= check(i-1) + check(i+16) + check(i+15); break;
+			case "bottomleft": board[i]= check(i+1) + check(i-16) + check(i-15); break;
+			case "bottomright": board[i]= check(i-1) + check(i-16) + check(i-17); break;
+			case "top": board[i]= check(i-1) + check(i+1) + check(i+15) + check(i+16) + check(i+17) ; break;
+			case "left": board[i]= check(i-16) + check(i+16) + check(i+1) + check(i-15) + check(i+17) ; break;
+			case "right": board[i]= check(i-16) + check(i+16) + check(i-1) + check(i+15) + check(i-17) ; break;
+			case "bottom": board[i]= check(i-1) + check(i-16) + check(i+1) + check(i-15) + check(i-17) ; break;
+			case "0": board[i]= check(i-1) + check(i+1) + check(i+16) + check(i-16) + check(i-17) + check(i+17) + check(i+15) + check(i-15);break;
+			
+		}
+	}
+}
+
+//if cell contains 0, reveal all neighbors until numbers are reached
+function reveal(n)
+{	
+	
+	if(board[n]==0 && (document.images[n].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg"))
+	{	
+		document.images[n].src = "http://mulan.csufresno.edu/~twilson/csci130/imgs/"+board[n]+".svg"; visib[n]=board[n];
+		 revealer(n);
+		
+	}
+
+	else if(board[n]==0 && (document.images[n].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg"))
+	{	numflags--;
+		document.images[n].src = "http://mulan.csufresno.edu/~twilson/csci130/imgs/"+board[n]+".svg"; visib[n]=board[n];
+		document.getElementById("theflags").value = numflags + "/" + num_mines;
+		revealer(n);
+		
+	}
+	else if(board[n]!="mine" && (document.images[n].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg"))
+	{
+		numflags--;
+		document.images[n].src = "http://mulan.csufresno.edu/~twilson/csci130/imgs/"+board[n]+".svg"; visib[n]=board[n];	
+		document.getElementById("theflags").value = numflags + "/" + num_mines;
+		
+	}
+
+	
+
+	else{	
+		document.images[n].src = "http://mulan.csufresno.edu/~twilson/csci130/imgs/"+board[n]+".svg"; visib[n]=board[n];}
+	
+}
+
+function revealer(i)
+{
+	switch(where[i])
+		{
+			case "topleft": reveal(i+1); reveal(i+16); reveal(i+17); break;
+			case "topright": reveal(i-1); reveal(i+16); reveal(i+15); break;
+			case "bottomleft": reveal(i+1);reveal(i-16); reveal(i-15); break;
+			case "bottomright": reveal(i-1) ;reveal(i-16) ;reveal(i-17); break;
+			case "top": reveal(i-1); reveal(i+1); reveal(i+15); reveal(i+16); reveal(i+17) ; break;
+			case "left": reveal(i-16) ; reveal(i+16); reveal(i+1); reveal(i-15); reveal(i+17) ; break;
+			case "right": reveal(i-16); reveal(i+16); reveal(i-1); reveal(i+15); reveal(i-17) ; break;
+			case "bottom": reveal(i-1); reveal(i-16); reveal(i+1); reveal(i-15); reveal(i-17) ; break;
+			case "0": reveal(i-1); reveal(i+1); reveal(i+16); reveal(i-16); reveal(i-17); reveal(i+17); reveal(i+15); reveal(i-15); break;			
+			case "mine": break;	
+			
+		}
+}
+
+//handles left clicks
+function clicky(n) 
+{
+    clicked = true;
+    if (gameover == true) { }
+  	else if(document.images[n].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+		 return;
+
+	else if(board[n]=="mine")
+	{
+		for(var i = 0; i< num_rows*num_cols; i++)
+		{
+			if(document.images[i].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg" && board[i] != "mine")
+				board[i]="xflag";		
+			
+			document.images[i].src = "http://mulan.csufresno.edu/~twilson/csci130/imgs/" + board[i] + ".svg";
+		}
+		youlose();
+        return -1;
+	}
+
+	else if(board[n] == 0)
+	{ reveal(n); num_tiles++; return visib[n];}
+	
+	else { document.images[n].src = "http://mulan.csufresno.edu/~twilson/csci130/imgs/" + board[n] + ".svg"; num_tiles++; visib[n] = board[n]; return visib[n];}
+	
+	
+}
+
+//handle right click to place or remove flags, update flag counter
+function rightclick(n)
+{
+	if(document.images[n].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg"){
+	    document.images[n].src = "http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg";
+		numflags--;}
+
+	else if(document.images[n].src =="http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg"){
+	    document.images[n].src = "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg";
+		numflags++; }
+	
+	document.getElementById("theflags").value = numflags + "/" + num_mines;
+	if ((num_tiles == (256 - num_mines)) && (numflags == num_mines)) youwin();
+	return false;
+}
+
+//creates a 16*16 table using HTML
+function maketable()
+{	
+	document.write('<table border="0" cellspacing="0" cellpadding="0">');
+
+	var n=0;
+	for(var i=0; i<num_rows; i++)
+	{	document.write('<tr>');
+				
+		for(var j=0; j<num_cols; j++)
+		{
+			document.write('<td><a HREF="" onClick="clicky('+n+'); return false;" onContextMenu="return rightclick('+n+'); return false;"><img SRC="http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg" WIDTH="24" HEIGHT="24"></a></td>');
+			n++;
+		}
+
+		document.write('</tr>');
+	}
+	
+	document.write('</table>');
+}
+
+//creates the form to display #of flags and time passed
+function controlform()
+{
+    document.write('<form NAME="f"><input TYPE="button" VALUE="New Game" onclick ="newGame()" ; onContextMenu="return false;" >&nbsp;&nbsp;&nbsp;&nbsp;Flags: <input TYPE="text" ID="theflags" NAME="flags" SIZE="6" readonly onContextMenu="return false;">&nbsp;&nbsp;&nbsp;&nbsp;Time: <input TYPE="text" ID="thetime" NAME="time" SIZE="6" VALUE="" readonly onContextMenu="return false;">&nbsp;&nbsp;&nbsp;&nbsp;<br><br><input TYPE="button" VALUE="Solve" onclick ="solve()" ; onContextMenu="return false;" >&nbsp;&nbsp;&nbsp;&nbsp;<input TYPE="button" VALUE="# Mines" onclick ="change_num_mines()" ; onContextMenu="return false;" >');
+}
+
+
+//called every second after game starts and displayed in Time text field
+function updateTimer()
+{
+    var t_secs = "";
+    var t_min = "";
+	var curTime = new Date(); 
+
+	var secs = (curTime.getTime() - begin) / 1000;
+	secs = secs.toFixed(0);
+	
+	var min = 0;
+	while (secs >= 60) {
+	    min++;
+	    secs = secs - 60;
+	}
+
+	if (min < 10)
+	    t_min = "0" + min.toString();
+	else
+	    t_min = min.toString();
+	if (secs < 10)
+	    t_secs = "0" + secs.toString();
+	else
+	    t_secs = secs.toString();
+	document.getElementById("thetime").value = t_min + ":" + t_secs;
+}
+
+
+//check if cell has mine
+function check(i)
+{
+	if(board[i]=="mine")return 1;
+	else return 0;
+}
+
+    // Win  scenario
+function youwin(n)
+{	
+	clearInterval(myTimer);
+	gameover=true;
+	alert('You Win!');
+}
+    // Lose scenario
+function youlose()
+{	
+	clearInterval(myTimer);
+	gameover=true;
+	if(num_tiles==0)alert('You Lose. Bad Luck.');
+	else alert('You Lose');
+}
+
+document.write('<h1>Minesweeper</h1>');
+maketable();
+controlform();
+
+// This is called if user hasnt clicked any squares yet
+function solver() {
+    var squares_clicked = new Array(num_rows * num_cols);
+    for (var i = 0; i < 256; i++)
+        squares_clicked[i] = 0;
+
+    // click randomly until we hit mine or find a zero square
+    while (true) {
+        i = Math.floor((Math.random() * 256) + 0); // i ranges from 0-255
+
+        if (squares_clicked[i] == 1) {
+            continue;
+        }
+        else {
+            squares_clicked[i] = 1;
+            var r = clicky(i);                    // r ranges from -1, 0, ... , 8
+
+            if (r == 0) {
+                find_ones();
+                S1(i);
+                break;
+            }
+
+            else if (r == 1) {
+                var p = Math.floor((Math.random() * 8) + 0);
+                guess_one(p);
+            }
+            else if (r == undefined) { break; }
+            else {
+                switch (where[i]) {
+                    case "topleft":
+                        if (r == 3) {
+                            if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 1); squares_clicked[i + 1] = 1; }
+                            if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
+                            if (document.images[i + 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 17); squares_clicked[i + 17] = 1; }
+                        }
+                        break;
+
+                    case "topright":
+                        if (r == 3) {
+                            if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 1); squares_clicked[i - 1] = 1; }
+                            if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
+                            if (document.images[i + 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 15); squares_clicked[i + 15] = 1; }
+
+                        }
+
+                        break;
+
+                    case "bottomleft":
+                        if (r == 3) {
+                            if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 1); squares_clicked[i + 1] = 1; }
+                            if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
+                            if (document.images[i - 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 15); squares_clicked[i - 15] = 1; }
+
+                        }
+                        break;
+
+                    case "bottomright":
+                        if (r == 3) {
+                            if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 1); squares_clicked[i - 1] = 1; }
+                            if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
+                            if (document.images[i - 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 17); squares_clicked[i - 17] = 1; }
+
+                        }
+                        break;
+
+                    case "top":
+                        if (r == 5) {
+                            if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 1); squares_clicked[i - 1] = 1; }
+                            if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 1); squares_clicked[i + 1] = 1; }
+                            if (document.images[i + 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 15); squares_clicked[i + 15] = 1; }
+                            if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
+                            if (document.images[i + 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 17); squares_clicked[i + 17] = 1; }
+
+                        }
+                        break;
+
+                    case "left":
+                        if (r == 5) {
+                            if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
+                            if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
+                            if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 1); squares_clicked[i + 1] = 1; }
+                            if (document.images[i - 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 15); squares_clicked[i - 15] = 1; }
+                            if (document.images[i + 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 17); squares_clicked[i + 17] = 1; }
+
+                        }
+                        break;
+
+                    case "right":
+                        if (r == 5) {
+                            if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
+                            if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
+                            if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 1); squares_clicked[i - 1] = 1; }
+                            if (document.images[i + 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 15); squares_clicked[i + 15] = 1; }
+                            if (document.images[i - 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 17); squares_clicked[i - 17] = 1; }
+
+                        }
+                        break;
+
+                    case "bottom":
+                        if (r == 5) {
+                            if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 1); squares_clicked[i - 1] = 1; }
+                            if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
+                            if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 1); squares_clicked[i + 1] = 1; }
+                            if (document.images[i - 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 15); squares_clicked[i - 15] = 1; }
+                            if (document.images[i - 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 17); squares_clicked[i - 17] = 1; }
+
+                        }
+                        break;
+
+                    case "0":
+                        if (r == 8) {
+                            if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 1); squares_clicked[i - 1] = 1; }
+                            if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 1); squares_clicked[i + 1] = 1; }
+                            if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
+                            if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
+                            if (document.images[i - 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 17); squares_clicked[i - 17] = 1; }
+                            if (document.images[i + 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 17); squares_clicked[i + 17] = 1; }
+                            if (document.images[i + 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i + 15); squares_clicked[i + 15] = 1; }
+                            if (document.images[i - 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")
+                            { rightclick(i - 15); squares_clicked[i - 15] = 1; }
+
+                        }
+                        break;
+                }
+            }
+        }
+    }
+}
+
+    // Calls solver() if user hasnt clicked, otherwise S1(0)
+function solve(){
+    if (clicked == false)
+        solver();
+    else
+        S1(0);
+}
+
+
+    // These functions return number of tiles/ number of flags touched by position i and perform right click on i
+function num_tiles_TL(i) {
+    var x = 0;
+    if ((visib[i + 1] == "tile")  ) { x++; }
+    if ((visib[i + 16] == "tile") ) { x++; }
+    if ((visib[i + 17] == "tile") ) { x++; }
+    return x;
+}
+function num_flags_TL(i) {
+    var x = 0;
+    if (document.images[i+1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+17].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    return x;
+}
+function right_click_TL(i) {
+    if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
+    if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i + 16); }
+    if (document.images[i + 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 17); }//check_tile(i + 17); }
+}
+    
+function num_tiles_TR(i) {
+    var x = 0;
+    if ((visib[i - 1] == "tile")  ) { x++; }
+    if ((visib[i + 16] == "tile") ) { x++; }
+    if ((visib[i + 15] == "tile") ) { x++; }
+    return x;
+}
+function num_flags_TR(i) {
+    var x = 0;
+    if (document.images[i-1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+15].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    return x;
+}
+function right_click_TR(i) {
+    if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
+    if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i + 16); }
+    if (document.images[i + 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 15); }//check_tile(i + 15); }
+}
+    
+function num_tiles_BL(i) {
+    var x = 0;
+    if ((visib[i + 1] == "tile")  ) { x++; }
+    if ((visib[i - 16] == "tile") ) { x++; }
+    if ((visib[i - 15] == "tile") ) { x++; }
+    return x;
+}
+function num_flags_BL(i) {
+    var x = 0;
+    if (document.images[i+1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-15].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    return x;
+}
+function right_click_BL(i) {
+    if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
+    if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i - 16); }
+    if (document.images[i - 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 15); }//check_tile(i - 15); }
+}
+    
+function num_tiles_BR(i) {
+    var x = 0;
+    if ((visib[i - 1] == "tile")  ) { x++; }
+    if ((visib[i - 16] == "tile") ) { x++; }
+    if ((visib[i - 17] == "tile") ) { x++; }
+
+    return x;
+}
+function num_flags_BR(i) {
+    var x = 0;
+    if (document.images[i-1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-17].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+
+    return x;
+}
+function right_click_BR(i) {
+    if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
+    if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i - 16); }
+    if (document.images[i - 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 17); }//check_tile(i - 17); }
+}
+    
+function num_tiles_T(i) {
+    var x = 0;
+    if ((visib[i - 1] == "tile")  ) { x++; }
+    if ((visib[i + 1] == "tile")  ) { x++; }
+    if ((visib[i + 15] == "tile") ) { x++; }
+    if ((visib[i + 16] == "tile") ) { x++; }
+    if ((visib[i + 17] == "tile") ) { x++; }
+    return x;
+}
+function num_flags_T(i) {
+    var x = 0;
+    if (document.images[i-1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+15].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+17].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    return x;
+}
+function right_click_T(i) {
+    if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
+    if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
+    if (document.images[i + 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 15); }//check_tile(i + 15); }
+    if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i + 16); }
+    if (document.images[i + 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 17); }//check_tile(i + 17); }
+}
+    
+function num_tiles_L(i) {
+    var x = 0;
+    if ((visib[i - 16] == "tile") ) { x++; }
+    if ((visib[i + 16] == "tile") ) { x++; }
+    if ((visib[i + 1] == "tile")  ) { x++; }
+    if ((visib[i - 15] == "tile") ) { x++; }
+    if ((visib[i + 17] == "tile") ) { x++; }
+    return x;
+}
+function num_flags_L(i) {
+    var x = 0;
+    if (document.images[i-16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-15].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+17].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    return x;
+}
+function right_click_L(i) {
+    if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i - 16); }
+    if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i + 16); }
+    if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
+    if (document.images[i - 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 15); }//check_tile(i - 15); }
+    if (document.images[i + 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 17); }//check_tile(i + 17); }
+}
+    
+function num_tiles_R(i) {
+    var x = 0;
+    if ((visib[i - 16] == "tile") ) { x++; }
+    if ((visib[i + 16] == "tile") ) { x++; }
+    if ((visib[i - 1] == "tile")  ) { x++; }
+    if ((visib[i + 15] == "tile") ) { x++; }
+    if ((visib[i - 17] == "tile") ) { x++; }
+    return x;
+}
+function num_flags_R(i) {
+    var x = 0;
+    if (document.images[i-16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+15].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-17].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    return x;
+}
+function right_click_R(i) {
+    if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i - 16); }
+    if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i + 16); }
+    if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
+    if (document.images[i + 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 15); }//check_tile(i + 15); }
+    if (document.images[i - 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 17); }//check_tile(i - 17); }
+}
+    
+function num_tiles_B(i) {
+    var x = 0;
+    if ((visib[i - 1] == "tile")  ) { x++; }
+    if ((visib[i - 16] == "tile") ) { x++; }
+    if ((visib[i + 1] == "tile")  ) { x++; }
+    if ((visib[i - 15] == "tile") ) { x++; }
+    if ((visib[i - 17] == "tile") ) { x++; }
+    return x;
+}
+function num_flags_B(i) {
+    var x = 0;
+    if (document.images[i-1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-15].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-17].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    return x;
+}
+function right_click_B(i) {
+    if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
+    if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i - 16); }
+    if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
+    if (document.images[i - 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 15); }//check_tile(i - 15); }
+    if (document.images[i - 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 17); }//check_tile(i - 17); }
+}
+
+function num_tiles_0(i) {
+    var x = 0;
+    if ((visib[i - 1] == "tile")  ) { x++; }
+    if ((visib[i + 1] == "tile")  ) { x++; }
+    if ((visib[i + 16] == "tile") ) { x++; }
+    if ((visib[i - 16] == "tile") ) { x++; }
+    if ((visib[i - 17] == "tile") ) { x++; }
+    if ((visib[i + 17] == "tile") ) { x++; }
+    if ((visib[i + 15] == "tile") ) { x++; }
+    if ((visib[i - 15] == "tile") ) { x++; }
+    
+    return x;
+}
+function num_flags_0(i) {
+    var x = 0;
+    if (document.images[i-1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+1].src  == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-16].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i-17].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+17].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i+15].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    if (document.images[i - 15].src == "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { x++; }
+    return x;
+}
+function right_click_0(i) {
+    if (document.images[i - 1].src  != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
+    if (document.images[i + 1].src  != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
+    if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i + 16); }
+    if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i - 16); }
+    if (document.images[i - 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 17); }//check_tile(i - 17); }
+    if (document.images[i + 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 17); }//check_tile(i + 17); }
+    if (document.images[i - 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i - 15); }//check_tile(i + 15); }
+    if (document.images[i + 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg") { rightclick(i + 15); }//check_tile(i - 15); }
+}
+
+    // Check number of flags being touched by position i
+    // Check number of tiles touching position i 
+function S2(i, e) {
+    switch (where[i]) {
+        case "topleft":
+            if (num_flags_TL(i) == e)
+            { clicky(i + 1); clicky(i + 16); clicky(i + 17); }
+            else if (num_tiles_TL(i) == e)
+                right_click_TL(i);
+            break;
+        case "topright":
+            if (num_flags_TR(i) == e)
+            { clicky(i - 1); clicky(i + 16); clicky(i + 15);  }
+            else if (num_tiles_TR(i) == e)
+                right_click_TR(i);
+            break;
+
+        case "bottomleft":
+            if (num_flags_BL(i) == e)
+            { clicky(i + 1); clicky(i - 16); clicky(i - 15);  }
+            else if (num_tiles_BL(i) == e)
+                right_click_BL(i);
+            break;
+
+        case "bottomright":
+            if (num_flags_BR(i) == e)
+            { clicky(i - 1); clicky(i - 16); clicky(i - 17);  }
+            else if (num_tiles_BR(i) == e)
+                right_click_BR(i);
+            break;
+
+        case "top":
+            if (num_flags_T(i) == e)
+            { clicky(i - 1); clicky(i + 1); clicky(i + 15); clicky(i + 16); clicky(i + 17);  }
+            else if (num_tiles_T(i) == e)
+                right_click_T(i);
+            break;
+
+        case "left":
+            if (num_flags_L(i) == e)
+            { clicky(i - 16); clicky(i + 16); clicky(i + 1); clicky(i - 15); clicky(i + 17);  }
+            else if (num_tiles_L(i) == e)
+                right_click_L(i);
+            break;
+
+        case "right":
+            if (num_flags_R(i) == e)
+            { clicky(i - 16); clicky(i + 16); clicky(i - 1); clicky(i + 15); clicky(i - 17);  }
+            else if (num_tiles_R(i) == e)
+                right_click_R(i);
+            break;
+
+        case "bottom":
+            if (num_flags_B(i) == e)
+            { clicky(i - 1); clicky(i - 16); clicky(i + 1); clicky(i - 15); clicky(i - 17); }
+            else if (num_tiles_B(i) == e)
+                right_click_B(i);
+            break;
+
+        case "0":
+            if ((num_flags_0(i)) == e)
+            { clicky(i - 1); clicky(i + 1); clicky(i + 16); clicky(i - 16); clicky(i - 17); clicky(i + 17); clicky(i + 15); clicky(i - 15); }
+            else if ((num_tiles_0(i)) == e)
+                right_click_0(i);
+            break;
+    }
+}
+
+    // Send the number displayed by position i to S2()
+function check_tile(i) {
+   
+    if (visib[i] == "1")
+        S2(i, 1);
+    else if (visib[i] == "2")
+        S2(i, 2);
+    else if (visib[i] == "3")
+        S2(i, 3);
+    else if (visib[i] == "4")
+        S2(i, 4);
+    else if (visib[i] == "5")
+        S2(i, 5);
+    else if (visib[i] == "6")
+        S2(i, 6);
+    else if (visib[i] == "7")
+        S2(i, 7);
+    else if (visib[i] == "8")
+        S2(i, 8);
+    else { }
+    
+}
+
+    // S1 calls most of solving functions and actions
+function S1(p) {
+    while (gameover == false) {
+        var updated = numflags;
+        for (var i = 0; i < 256; i++) {
+            check_tile(i);
+            find_ones();
+        }
+
+        if (numflags == (num_mines - 1)) {
+            var tile1 = 0;
+            var tile2 = 0;
+            for (var i = 0; i < 256; i++) {
+                if ((visib[i] == "tile") && (document.images[i] != "http://mulan.csufresno.edu/~twilson/csci130/imgs/flag.svg")) {
+                    tile1++;
+                    tile2 = i;
+                }
+            }
+            if (tile1 == 1)
+                rightclick(tile2);
+        }
+
+
+        else if (numflags == num_mines) {
+            for (var i = 0; i < 256; i++) {
+                clicky(i);
+            }
+            youwin();
+        }
+
+        if (updated == numflags) {
+            break;
+        }
+    }
+    
+}
+
+    // Find  1-1 pairs next to borders
+function find_ones() {
+    for (var i = 0; i < 16; i++) {
+        if ((visib[i] == "1") && (visib[i + 16] == "1")) {
+            if (where[i] == "topleft") { clicky(i + 32); clicky(i + 33); }
+            else if (where[i] == "topright") { clicky(i + 31); clicky(i + 32); }
+            else { clicky(i + 31); clicky(i + 32); clicky(i + 33); }
+        }
+    }
+
+    for (var i = 0; i < 241; i = i + 16) {
+        if ((visib[i] == "1") && (visib[i + 1] == "1")) {
+            if (where[i] == "topleft") { clicky(i + 2); clicky(i + 18); }
+            else if (where[i] == "bottomleft") { clicky(i + 2); clicky(i - 14); }
+            else { clicky(i - 14); clicky(i + 2); clicky(i + 18); }
+        }
+    }
+
+    for (var i = 15; i < 256; i = i + 16) {
+        if ((visib[i] == "1") && (visib[i - 1] == "1")) {
+            if (where[i] == "topright") { clicky(i - 2); clicky(i + 14); }
+            else if (where[i] == "bottomright") { clicky(i - 2); clicky(i - 18); }
+            else { clicky(i - 18); clicky(i - 2); clicky(i + 14); }
+        }
+    }
+
+    for (var i = 240; i < 256; i++) {
+        if ((visib[i] == "1") && (visib[i - 16] == "1")) {
+            if (where[i] == "bottomleft") { clicky(i - 32); clicky(i - 31); }
+            else if (where[i] == "bottomright") { clicky(i - 32); clicky(i - 33); }
+            else { clicky(i - 33); clicky(i - 32); clicky(i - 31); }
+        }
+    }
+}
+
+    // Update number of mines on board, start new game
+function change_num_mines() {
+    var num = prompt("Enter number between 1 and 100", num_mines);
+    if (!(num < 1) && !(num > 100)) {
+        num_mines = num;
+        newGame();
+    }
+
+}
+
+    // Return number of tiles touching position i
+function count_tiles(i) {
+    switch (where[i]) {
+        case "topleft":
+            var x = num_tiles_TL(i);
+            return x;
+            break;
+        case "topright":
+            var x = num_tiles_TR(i);
+            return x;
+            break;
+
+        case "bottomleft":
+            var x = num_tiles_BL(i);
+            return x;
+            break;
+
+        case "bottomright":
+            var x = num_tiles_BR(i);
+            return x;
+            break;
+
+        case "top":
+            var x = num_tiles_T(i);
+            return x;
+            break;
+
+        case "left":
+            var x = num_tiles_L(i);
+            return x;
+            break;
+
+        case "right":
+            var x = num_tiles_R(i);
+            return x;
+            break;
+
+        case "bottom":
+            var x = num_tiles_B(i);
+            return x;
+            break;
+
+        case "0":
+            var x = num_tiles_0(i);
+            return x;
+            break;
+    }
+}
+
+    // Take guess
+function guess_one(i) {
+    if (where[i] == "0") {
+        clicky(i);
+    }
+}
+
+</script>
+</body>
+</html>
+   
