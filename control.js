@@ -170,9 +170,29 @@ function maketable() {
 
 //creates the form to display #of flags and time passed
 function controlform() {
-    document.write('<br/><form NAME="f"><input TYPE="button" VALUE="New Game" onclick ="newGame()" ; onContextMenu="return false;" >&nbsp;&nbsp;&nbsp;&nbsp;Flags: <input TYPE="text" ID="theflags" NAME="flags" SIZE="6" readonly onContextMenu="return false;">&nbsp;&nbsp;&nbsp;&nbsp;Time: <input TYPE="text" ID="thetime" NAME="time" SIZE="6" VALUE="" readonly onContextMenu="return false;">&nbsp;&nbsp;&nbsp;&nbsp;<br><br><input TYPE="button" VALUE="Solve" onclick ="solve()" ; onContextMenu="return false;" >&nbsp;&nbsp;&nbsp;&nbsp;<input TYPE="button" VALUE="# Mines" onclick ="change_num_mines()" ; onContextMenu="return false;" >');
+    document.write(
+        '<br/>              \
+        <form NAME="f">     \
+        <input TYPE="button" VALUE="New Game" onclick ="newGame()"; onContextMenu="return false;" >&nbsp;&nbsp;&nbsp;&nbsp; \
+        Flags: <input TYPE="text" ID="theflags" NAME="flags" SIZE="6" readonly onContextMenu="return false;">&nbsp;&nbsp;&nbsp;&nbsp; \
+        Time:  <input TYPE="text" ID="thetime"  NAME="time"  SIZE="6" VALUE="" readonly onContextMenu="return false;">&nbsp;&nbsp;&nbsp;&nbsp; \
+        <br><br> \
+        <input id = "solve_button" TYPE="button" VALUE="Solve" onclick ="solve()"; onContextMenu="return false;" >&nbsp;&nbsp;&nbsp;&nbsp; \
+        <div id="solving" style="display:none; width=100%; height=auto;">Solving</div>        \
+        <input TYPE="button" VALUE="# Mines" onclick ="change_num_mines()"; onContextMenu="return false;" >'
+        );
 }
 
+function toggle_solve_button() {
+    if ($('#solve_button').is(':visible')) {
+        $("#solve_button").hide();
+        $("#solving").show();
+    }
+    else {
+        $("#solve_button").show();
+        $("#solving").hide();
+    }
+}
 
 //called every second after game starts and displayed in Time text field
 function updateTimer() {
