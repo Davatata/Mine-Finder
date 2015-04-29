@@ -12,7 +12,7 @@
 
     New game button: will end current game, randomize the board for a new game. 
 
-    I tested 40 games with 30 mines and 40 games with 40 mines. These are the results. 
+    I tested 40 games with 30 mines and 40 games with 40 mines. These are the results for Wins, Losses, Stuck. 
 
 	Date: 12/1/14
     30 mines (40 games)     40 mines (40 games)
