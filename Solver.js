@@ -65,9 +65,6 @@ function solver() {
                         clicky(p);
                     }
                 }
-                else {
-                    continue;
-                }
             }
             else if (r == undefined) { break; }
             else {
