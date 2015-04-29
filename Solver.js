@@ -1,3 +1,4 @@
+// Global variables holding game data
 var numflags = 0;
 var num_tiles = 0;
 var num_rows = 16;
@@ -6,7 +7,6 @@ var num_mines = 40;
 var board = new Array(num_rows * num_cols);     // Hidden from player. (0-8, and "mine" initially)
 var visib = new Array(num_rows * num_cols);     // Visible to the player.  (Blank tiles initially)
 var where = new Array(num_rows * num_cols);     // Tells game where the tile is relative to board. (Top, Bottom, 0, Bottomright...)
-
 var gameover = false;
 var myTimer;
 
@@ -44,27 +44,29 @@ function solver() {
     while (true) {
         i = Math.floor((Math.random() * 256) + 0); // i ranges from 0-255
 
-        if (squares_clicked[i] == 1) {
+        if (squares_clicked[i] == 1 || touching_number(i)) {
             continue;
         }
         else {
             squares_clicked[i] = 1;
-            var r = clicky(i);                    // r ranges from -1, 0, ... , 8
+            var r = clicky(i);                    // r ranges from (-1, 0, ... , 8) to represent (losing, blank, ... , 8)
+
 
             if (r == 0) {
                 find_ones();
                 S1(i);
                 break;
             }
-
+            
             else if (r == 1) {
-                if (touching_all_tiles(i) && where[i] == "0") {
-                    var p = guess_a_touching(i);
-                    clicky(p);
+                if (where[i] == "0") {
+                    if (touching_all_tiles(i)) {
+                        var p = guess_a_touching(i);
+                        clicky(p);
+                    }
                 }
                 else {
-                    var p = Math.floor((Math.random() * 8) + 0);
-                    guess_one(p);
+                    continue;
                 }
             }
             else if (r == undefined) { break; }
@@ -388,23 +390,9 @@ function guess_one(i) {
 
 // Check if a "middle" tile is surrounded by all unopened tiles.
 function touching_all_tiles(i) {
-    if (document.images[i - 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg")
-        return false;
-    if (document.images[i + 1].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg")
-        return false;
-    if (document.images[i + 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg")
-        return false;
-    if (document.images[i - 16].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg")
-        return false;
-    if (document.images[i - 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg")
-        return false;
-    if (document.images[i + 17].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg")
-        return false;
-    if (document.images[i + 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg")
-        return false;
-    if (document.images[i - 15].src != "http://mulan.csufresno.edu/~twilson/csci130/imgs/tile.svg")
-        return false;
-    return true;
+    if(count_tiles(i) == 8)
+        return true;
+    return false;
 }
 
 function guess_a_touching(i) {

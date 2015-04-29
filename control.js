@@ -416,8 +416,8 @@ function right_click_B(i) {
 
 function num_tiles_0(i) {
     var x = 0;
-    if ((visib[i - 1] == "tile")) { x++; }
-    if ((visib[i + 1] == "tile")) { x++; }
+    if ((visib[i - 1]  == "tile")) { x++; }
+    if ((visib[i + 1]  == "tile")) { x++; }
     if ((visib[i + 16] == "tile")) { x++; }
     if ((visib[i - 16] == "tile")) { x++; }
     if ((visib[i - 17] == "tile")) { x++; }
@@ -505,6 +505,54 @@ function count_tiles(i) {
         case "0":
             var x = num_tiles_0(i);
             return x;
+            break;
+    }
+}
+
+function touching_number(i) {
+    switch (where[i]) {
+        case "topleft":
+            var x = num_tiles_TL(i);
+            return x != 3;
+            break;
+        case "topright":
+            var x = num_tiles_TR(i);
+            return x != 3;
+            break;
+
+        case "bottomleft":
+            var x = num_tiles_BL(i);
+            return x != 3;
+            break;
+
+        case "bottomright":
+            var x = num_tiles_BR(i);
+            return x != 3;
+            break;
+
+        case "top":
+            var x = num_tiles_T(i);
+            return x != 5;
+            break;
+
+        case "left":
+            var x = num_tiles_L(i);
+            return x != 5;
+            break;
+
+        case "right":
+            var x = num_tiles_R(i);
+            return x != 5;
+            break;
+
+        case "bottom":
+            var x = num_tiles_B(i);
+            return x != 5;
+            break;
+
+        case "0":
+            var x = num_tiles_0(i);
+            return x != 8;
             break;
     }
 }

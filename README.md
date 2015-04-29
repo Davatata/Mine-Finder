@@ -14,7 +14,16 @@
 
     I tested 40 games with 30 mines and 40 games with 40 mines. These are the results. 
 
+	Date: 12-1-14
     30 mines (40 games)     40 mines (40 games)
-        W – 12.5 %               W – 60 %
-        L - 40   %               L - 15 %
-        S - 47.5 %               S - 25 %
+        W – 60 %               W – 12.5 %
+        L - 15 %               L - 40   %
+        S - 25 %               S - 47.5 %
+		
+	Date: 4/28/15
+    30 mines (40 games)     40 mines (40 games)
+        W – 50 %               W – 27.5 %
+        L - 30 %               L - 27.5 %
+        S - 20 %               S - 45   %
+		
+	
