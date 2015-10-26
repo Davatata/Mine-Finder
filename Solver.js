@@ -333,7 +333,7 @@ function S1(p) {
         if (updated == numflags) {
             runs += 1;
             if (runs > 4) {
-                alert("Stuck, last clicked was " + (last_clicked));
+                alert("Stuck!");
                 break;
             }
         }
