@@ -20,13 +20,17 @@
 <head>
 <title>SweeperSolver</title>
 </head>
-<body onload="newGame()">
+<body onload="poponload(); newGame()" style="width:415; height:595;">
 <script src="jquery-1.11.3.js"></script>
 <script src="control.js"></script>
 <script src="Solver.js"></script>
 <script>
-
-document.write('<h1>Minesweeper</h1>');
+function poponload()
+{
+    testwindow = window.open("https://rawgit.com/Davatata/Mine-Finder/master/Mine_finder.html", "mywindow", "location=1,status=1,scrollbars=1,width=450,height=650");
+    testwindow.moveTo(0, 0);
+}
+document.write('<h1 style="display:inline-block;">Minesweeper</h1>');
 maketable();
 controlform();
 

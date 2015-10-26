@@ -180,7 +180,7 @@ function maketable() {
 function controlform() {
     document.write(
 	'<br/>              \
-	<form NAME="f">     \
+	<form NAME="f" style="display:inline-block;">     \
 	<input TYPE="button" VALUE="New Game" onclick ="newGame()"; onContextMenu="return false;" >&nbsp;&nbsp;&nbsp;&nbsp; \
 	Flags: <input TYPE="text" ID="theflags" NAME="flags" SIZE="6" readonly onContextMenu="return false;">&nbsp;&nbsp;&nbsp;&nbsp; \
 	Time:  <input TYPE="text" ID="thetime"  NAME="time"  SIZE="6" VALUE="" readonly onContextMenu="return false;">&nbsp;&nbsp;&nbsp;&nbsp; \
