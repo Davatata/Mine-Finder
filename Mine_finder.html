@@ -1,15 +1,35 @@
+<!--
+    David Tataryan
+
+    This program is a minesweeper game with a solver added to it.
+    The game can be played without the solver.
+
+    To run the game, open the file in your browser and start playing.
+    Tested only on Chrome and Mozilla. 
+
+    Solve button: will attempt to solve the game. 
+        It will either solve, lose, or get stuck
+
+    #Mines button: will let you change the number of mines. (1 <= n <= 100 ).
+        It will start a new game after change.
+
+    New game button: will end current game, randomize the board for a new game. 
+-->
 
 <html>
 <head>
 <title>SweeperSolver</title>
 </head>
-<body onload="poponload();">
+<body onload="newGame()" style="width:415; height:595;">
+<script src="jquery-1.11.3.js"></script>
+<script src="control.js"></script>
+<script src="Solver.js"></script>
 <script>
-function poponload()
-{
-    testwindow = window.open("https://rawgit.com/Davatata/Mine-Finder/master/window.html", "mywindow", "location=1,status=1,scrollbars=1,width=450,height=650,resizeable=no");
-    testwindow.moveTo(0, 0);
-}
+
+document.write('<h1 style="display:inline-block;">Minesweeper</h1>');
+maketable();
+controlform();
+
 </script>
 </body>
 </html>
