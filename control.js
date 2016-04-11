@@ -159,26 +159,31 @@ function rightclick(n) {
 
 //creates a num_cols*num_rows table using HTML
 function maketable() {
+    var board_make = '';
     document.write('<table border="0" cellspacing="0" cellpadding="0">');
 	
     var n = 0;
     for (var i = 0; i < num_rows; i++) {
-        document.write('<tr>');
-		
+        //document.write('<tr>');
+		board_make+= '<tr>';
         for (var j = 0; j < num_cols; j++) {
-            document.write('<td><a HREF="" onClick="clicky(' + n + '); return false;" onContextMenu="return rightclick(' + n + '); return false;"><img SRC="https://rawgit.com/Davatata/Mine-Finder/master/imgs/tile.svg" WIDTH="24" HEIGHT="24"></a></td>');
+            //document.write('<td><a HREF="" onClick="clicky(' + n + '); return false;" onContextMenu="return rightclick(' + n + '); return false;"><img SRC="https://rawgit.com/Davatata/Mine-Finder/master/imgs/tile.svg" WIDTH="24" HEIGHT="24"></a></td>');
+            board_make += '<td><a HREF="" onClick="clicky(' + n + '); return false;" onContextMenu="return rightclick(' + n + '); return false;"><img SRC="https://rawgit.com/Davatata/Mine-Finder/master/imgs/tile.svg"></a></td>';
             n++;
 		}
 		
-        document.write('</tr>');
+        //document.write('</tr>');
+        board_make += '</tr>';
 	}
 	
-    document.write('</table>');
+    //document.write('</table>');
+    board_make += '</table>';
+    $("#board").html(board_make);
 }
 
 //creates the form to display #of flags and time passed
 function controlform() {
-    document.write(
+    /*document.write(
 	'<br/>              \
 	<form NAME="f" style="display:inline-block;">     \
 	<input TYPE="button" VALUE="New Game" onclick ="newGame()"; onContextMenu="return false;" >&nbsp;&nbsp;&nbsp;&nbsp; \
@@ -188,7 +193,7 @@ function controlform() {
 	<input id = "solve_button" TYPE="button" VALUE="Solve" onclick ="solve()"; onContextMenu="return false;" >&nbsp;&nbsp;&nbsp;&nbsp; \
 	<div id="solving" style="display:none; width=100%; height=auto;">Solving</div>        \
 	<input TYPE="button" VALUE="# Mines" onclick ="change_num_mines()"; onContextMenu="return false;" >'
-	);
+	);*/
 }
 
 function toggle_solve_button() {
