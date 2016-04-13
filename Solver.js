@@ -4,6 +4,7 @@ var num_tiles = 0;
 var num_rows = 9;
 var num_cols = 9;
 var num_mines = 10;
+var num_reveals = 0;
 var rxc = num_rows*num_cols;
 var rxc_1 = rxc-num_rows;
 var row = num_rows;
