@@ -1,4 +1,5 @@
 function newGame() {
+    console.log("newgame");
     clock = 0;
     numflags = 0;
     num_tiles = 0;
@@ -31,6 +32,8 @@ function newGame() {
     setboard();
 	
     document.getElementById("theflags").value = numflags + "/" + num_mines;
+
+    
 }
 
 // pause execution
@@ -43,25 +46,26 @@ function sleep(miliseconds) {
 
 //sets up the numbers according to mine placement
 function setboard() {
+
     for (var i = 0; i < num_rows * num_cols; i++) where[i] = board[i];
-    where[0] = "topleft"; where[15] = "topright"; where[240] = "bottomleft"; where[255] = "bottomright";
-    for (var i = 1; i < 15; i++) where[i] = "top";
-    for (var i = 16; i < 240; i += 16) where[i] = "left";
-    for (var i = 31; i < 255; i += 16) where[i] = "right";
-    for (var i = 241; i < 255; i++) where[i] = "bottom";
+    where[0] = "topleft"; where[num_rows-1] = "topright"; where[rxc - num_rows] = "bottomleft"; where[rxc - 1] = "bottomright";
+    for (var i = 1; i < num_rows-1; i++) where[i] = "top";
+    for (var i = num_rows; i < rxc_1; i += num_rows) where[i] = "left";
+    for (var i = (num_rows*2-1); i < rxc-1; i += num_rows) where[i] = "right";
+    for (var i = rxc_1+1; i < rxc-1; i++) where[i] = "bottom";
 	
     for (var i = 0; i < num_rows * num_cols; i++) {
         if (board[i] == "mine") continue;
         switch (where[i]) {
-            case "topleft": board[i] = check(i + 1) + check(i + 16) + check(i + 17); break;
-            case "topright": board[i] = check(i - 1) + check(i + 16) + check(i + 15); break;
-            case "bottomleft": board[i] = check(i + 1) + check(i - 16) + check(i - 15); break;
-            case "bottomright": board[i] = check(i - 1) + check(i - 16) + check(i - 17); break;
-            case "top": board[i] = check(i - 1) + check(i + 1) + check(i + 15) + check(i + 16) + check(i + 17); break;
-            case "left": board[i] = check(i - 16) + check(i + 16) + check(i + 1) + check(i - 15) + check(i + 17); break;
-            case "right": board[i] = check(i - 16) + check(i + 16) + check(i - 1) + check(i + 15) + check(i - 17); break;
-            case "bottom": board[i] = check(i - 1) + check(i - 16) + check(i + 1) + check(i - 15) + check(i - 17); break;
-            case "0": board[i] = check(i - 1) + check(i + 1) + check(i + 16) + check(i - 16) + check(i - 17) + check(i + 17) + check(i + 15) + check(i - 15); break;
+            case "topleft": board[i] = check(i + 1) + check(i + row) + check(i + (row+1)); break;
+            case "topright": board[i] = check(i - 1) + check(i + row) + check(i + (row-1)); break;
+            case "bottomleft": board[i] = check(i + 1) + check(i - row) + check(i - (row-1)); break;
+            case "bottomright": board[i] = check(i - 1) + check(i - row) + check(i - (row+1)); break;
+            case "top": board[i] = check(i - 1) + check(i + 1) + check(i + (row-1)) + check(i + row) + check(i + (row+1)); break;
+            case "left": board[i] = check(i - row) + check(i + row) + check(i + 1) + check(i - (row-1)) + check(i + (row+1)); break;
+            case "right": board[i] = check(i - row) + check(i + row) + check(i - 1) + check(i + (row-1)) + check(i - (row+1)); break;
+            case "bottom": board[i] = check(i - 1) + check(i - row) + check(i + 1) + check(i - (row-1)) + check(i - (row+1)); break;
+            case "0": board[i] = check(i - 1) + check(i + 1) + check(i + row) + check(i - row) + check(i - (row+1)) + check(i + (row+1)) + check(i + (row-1)) + check(i - (row-1)); break;
 			
 		}
 	}
@@ -100,15 +104,15 @@ function reveal(n) {
 
 function revealer(i) {
     switch (where[i]) {
-        case "topleft": reveal(i + 1); reveal(i + 16); reveal(i + 17); break;
-        case "topright": reveal(i - 1); reveal(i + 16); reveal(i + 15); break;
-        case "bottomleft": reveal(i + 1); reveal(i - 16); reveal(i - 15); break;
-        case "bottomright": reveal(i - 1); reveal(i - 16); reveal(i - 17); break;
-        case "top": reveal(i - 1); reveal(i + 1); reveal(i + 15); reveal(i + 16); reveal(i + 17); break;
-        case "left": reveal(i - 16); reveal(i + 16); reveal(i + 1); reveal(i - 15); reveal(i + 17); break;
-        case "right": reveal(i - 16); reveal(i + 16); reveal(i - 1); reveal(i + 15); reveal(i - 17); break;
-        case "bottom": reveal(i - 1); reveal(i - 16); reveal(i + 1); reveal(i - 15); reveal(i - 17); break;
-        case "0": reveal(i - 1); reveal(i + 1); reveal(i + 16); reveal(i - 16); reveal(i - 17); reveal(i + 17); reveal(i + 15); reveal(i - 15); break;
+        case "topleft": reveal(i + 1); reveal(i + row); reveal(i + (row+1)); break;
+        case "topright": reveal(i - 1); reveal(i + row); reveal(i + (row-1)); break;
+        case "bottomleft": reveal(i + 1); reveal(i - row); reveal(i - (row-1)); break;
+        case "bottomright": reveal(i - 1); reveal(i - row); reveal(i - (row+1)); break;
+        case "top": reveal(i - 1); reveal(i + 1); reveal(i + (row-1)); reveal(i + row); reveal(i + (row+1)); break;
+        case "left": reveal(i - row); reveal(i + row); reveal(i + 1); reveal(i - (row-1)); reveal(i + (row+1)); break;
+        case "right": reveal(i - row); reveal(i + row); reveal(i - 1); reveal(i + (row-1)); reveal(i - (row+1)); break;
+        case "bottom": reveal(i - 1); reveal(i - row); reveal(i + 1); reveal(i - (row-1)); reveal(i - (row+1)); break;
+        case "0": reveal(i - 1); reveal(i + 1); reveal(i + row); reveal(i - row); reveal(i - (row+1)); reveal(i + (row+1)); reveal(i + (row-1)); reveal(i - (row-1)); break;
         case "mine": break;
 		
 	}
@@ -153,14 +157,16 @@ function rightclick(n) {
 	}
 	
     document.getElementById("theflags").value = numflags + "/" + num_mines;
-    if ((num_tiles == (256 - num_mines)) && (numflags == num_mines)) youwin();
+    if ((num_tiles == (rxc - num_mines)) && (numflags == num_mines)) youwin();
     return false;
 }
 
 //creates a num_cols*num_rows table using HTML
 function maketable() {
+    console.log("maketable");
+    $("#board").html();
     var board_make = '';
-    document.write('<table border="0" cellspacing="0" cellpadding="0">');
+    //document.write('<table border="0" cellspacing="0" cellpadding="0">');
 	
     var n = 0;
     for (var i = 0; i < num_rows; i++) {
@@ -181,25 +187,10 @@ function maketable() {
     $("#board").html(board_make);
 }
 
-//creates the form to display #of flags and time passed
-function controlform() {
-    /*document.write(
-	'<br/>              \
-	<form NAME="f" style="display:inline-block;">     \
-	<input TYPE="button" VALUE="New Game" onclick ="newGame()"; onContextMenu="return false;" >&nbsp;&nbsp;&nbsp;&nbsp; \
-	Flags: <input TYPE="text" ID="theflags" NAME="flags" SIZE="6" readonly onContextMenu="return false;">&nbsp;&nbsp;&nbsp;&nbsp; \
-	Time:  <input TYPE="text" ID="thetime"  NAME="time"  SIZE="6" VALUE="" readonly onContextMenu="return false;">&nbsp;&nbsp;&nbsp;&nbsp; \
-	<br><br> \
-	<input id = "solve_button" TYPE="button" VALUE="Solve" onclick ="solve()"; onContextMenu="return false;" >&nbsp;&nbsp;&nbsp;&nbsp; \
-	<div id="solving" style="display:none; width=100%; height=auto;">Solving</div>        \
-	<input TYPE="button" VALUE="# Mines" onclick ="change_num_mines()"; onContextMenu="return false;" >'
-	);*/
-}
 
 function toggle_solve_button() {
     $('#solve_button').toggle();
     $("#solving").toggle();
-    
 }
 
 //called every second after game starts and displayed in Time text field
@@ -239,199 +230,215 @@ function check(i) {
 function num_tiles_TL(i) {
     var x = 0;
     if ((visib[i + 1] == "tile")) { x++; }
-    if ((visib[i + 16] == "tile")) { x++; }
-    if ((visib[i + 17] == "tile")) { x++; }
+    if ((visib[i + row] == "tile")) { x++; }
+    if ((visib[i + (row+1)] == "tile")) { x++; }
     return x;
 }
+
 function num_flags_TL(i) {
     var x = 0;
     if (document.images[i + 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 17].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + (row+1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     return x;
 }
+
 function right_click_TL(i) {
     if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
-    if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i + 16); }
-    if (document.images[i + 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 17); }//check_tile(i + 17); }
+    if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + row); }//check_tile(i + row); }
+    if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + (row+1)); }//check_tile(i + (row+1)); }
 }
 
 function num_tiles_TR(i) {
     var x = 0;
     if ((visib[i - 1] == "tile")) { x++; }
-    if ((visib[i + 16] == "tile")) { x++; }
-    if ((visib[i + 15] == "tile")) { x++; }
+    if ((visib[i + row] == "tile")) { x++; }
+    if ((visib[i + (row-1)] == "tile")) { x++; }
     return x;
 }
+
 function num_flags_TR(i) {
     var x = 0;
     if (document.images[i - 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 15].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + (row-1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     return x;
 }
+
 function right_click_TR(i) {
     if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
-    if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i + 16); }
-    if (document.images[i + 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 15); }//check_tile(i + 15); }
+    if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + row); }//check_tile(i + row); }
+    if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + (row-1)); }//check_tile(i + (row-1)); }
 }
 
 function num_tiles_BL(i) {
     var x = 0;
     if ((visib[i + 1] == "tile")) { x++; }
-    if ((visib[i - 16] == "tile")) { x++; }
-    if ((visib[i - 15] == "tile")) { x++; }
+    if ((visib[i - row] == "tile")) { x++; }
+    if ((visib[i - (row-1)] == "tile")) { x++; }
     return x;
 }
+
 function num_flags_BL(i) {
     var x = 0;
     if (document.images[i + 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 15].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - (row-1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     return x;
 }
+
 function right_click_BL(i) {
     if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
-    if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i - 16); }
-    if (document.images[i - 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 15); }//check_tile(i - 15); }
+    if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - row); }//check_tile(i - row); }
+    if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - (row-1)); }//check_tile(i - (row-1)); }
 }
 
 function num_tiles_BR(i) {
     var x = 0;
     if ((visib[i - 1] == "tile")) { x++; }
-    if ((visib[i - 16] == "tile")) { x++; }
-    if ((visib[i - 17] == "tile")) { x++; }
+    if ((visib[i - row] == "tile")) { x++; }
+    if ((visib[i - (row+1)] == "tile")) { x++; }
 	
     return x;
 }
+
 function num_flags_BR(i) {
     var x = 0;
     if (document.images[i - 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 17].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - (row+1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
 	
     return x;
 }
+
 function right_click_BR(i) {
     if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
-    if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i - 16); }
-    if (document.images[i - 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 17); }//check_tile(i - 17); }
+    if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - row); }//check_tile(i - row); }
+    if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - (row+1)); }//check_tile(i - (row+1)); }
 }
 
 function num_tiles_T(i) {
     var x = 0;
     if ((visib[i - 1] == "tile")) { x++; }
     if ((visib[i + 1] == "tile")) { x++; }
-    if ((visib[i + 15] == "tile")) { x++; }
-    if ((visib[i + 16] == "tile")) { x++; }
-    if ((visib[i + 17] == "tile")) { x++; }
+    if ((visib[i + (row-1)] == "tile")) { x++; }
+    if ((visib[i + row] == "tile")) { x++; }
+    if ((visib[i + (row+1)] == "tile")) { x++; }
     return x;
 }
+
 function num_flags_T(i) {
     var x = 0;
     if (document.images[i - 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     if (document.images[i + 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 15].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 17].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + (row-1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + (row+1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     return x;
 }
+
 function right_click_T(i) {
     if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
     if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
-    if (document.images[i + 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 15); }//check_tile(i + 15); }
-    if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i + 16); }
-    if (document.images[i + 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 17); }//check_tile(i + 17); }
+    if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + (row-1)); }//check_tile(i + (row-1)); }
+    if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + row); }//check_tile(i + row); }
+    if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + (row+1)); }//check_tile(i + (row+1)); }
 }
 
 function num_tiles_L(i) {
     var x = 0;
-    if ((visib[i - 16] == "tile")) { x++; }
-    if ((visib[i + 16] == "tile")) { x++; }
+    if ((visib[i - row] == "tile")) { x++; }
+    if ((visib[i + row] == "tile")) { x++; }
     if ((visib[i + 1] == "tile")) { x++; }
-    if ((visib[i - 15] == "tile")) { x++; }
-    if ((visib[i + 17] == "tile")) { x++; }
+    if ((visib[i - (row-1)] == "tile")) { x++; }
+    if ((visib[i + (row+1)] == "tile")) { x++; }
     return x;
 }
+
 function num_flags_L(i) {
     var x = 0;
-    if (document.images[i - 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     if (document.images[i + 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 15].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 17].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - (row-1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + (row+1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     return x;
 }
+
 function right_click_L(i) {
-    if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i - 16); }
-    if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i + 16); }
+    if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - row); }//check_tile(i - row); }
+    if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + row); }//check_tile(i + row); }
     if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
-    if (document.images[i - 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 15); }//check_tile(i - 15); }
-    if (document.images[i + 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 17); }//check_tile(i + 17); }
+    if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - (row-1)); }//check_tile(i - (row-1)); }
+    if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + (row+1)); }//check_tile(i + (row+1)); }
 }
 
 function num_tiles_R(i) {
     var x = 0;
-    if ((visib[i - 16] == "tile")) { x++; }
-    if ((visib[i + 16] == "tile")) { x++; }
+    if ((visib[i - row] == "tile")) { x++; }
+    if ((visib[i + row] == "tile")) { x++; }
     if ((visib[i - 1] == "tile")) { x++; }
-    if ((visib[i + 15] == "tile")) { x++; }
-    if ((visib[i - 17] == "tile")) { x++; }
+    if ((visib[i + (row-1)] == "tile")) { x++; }
+    if ((visib[i - (row+1)] == "tile")) { x++; }
     return x;
 }
+
 function num_flags_R(i) {
     var x = 0;
-    if (document.images[i - 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     if (document.images[i - 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 15].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 17].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + (row-1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - (row+1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     return x;
 }
+
 function right_click_R(i) {
-    if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i - 16); }
-    if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i + 16); }
+    if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - row); }//check_tile(i - row); }
+    if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + row); }//check_tile(i + row); }
     if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
-    if (document.images[i + 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 15); }//check_tile(i + 15); }
-    if (document.images[i - 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 17); }//check_tile(i - 17); }
+    if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + (row-1)); }//check_tile(i + (row-1)); }
+    if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - (row+1)); }//check_tile(i - (row+1)); }
 }
 
 function num_tiles_B(i) {
     var x = 0;
     if ((visib[i - 1] == "tile")) { x++; }
-    if ((visib[i - 16] == "tile")) { x++; }
+    if ((visib[i - row] == "tile")) { x++; }
     if ((visib[i + 1] == "tile")) { x++; }
-    if ((visib[i - 15] == "tile")) { x++; }
-    if ((visib[i - 17] == "tile")) { x++; }
+    if ((visib[i - (row-1)] == "tile")) { x++; }
+    if ((visib[i - (row+1)] == "tile")) { x++; }
     return x;
 }
+
 function num_flags_B(i) {
     var x = 0;
     if (document.images[i - 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     if (document.images[i + 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 15].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 17].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - (row-1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - (row+1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     return x;
 }
+
 function right_click_B(i) {
     if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
-    if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i - 16); }
+    if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - row); }//check_tile(i - row); }
     if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
-    if (document.images[i - 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 15); }//check_tile(i - 15); }
-    if (document.images[i - 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 17); }//check_tile(i - 17); }
+    if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - (row-1)); }//check_tile(i - (row-1)); }
+    if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - (row+1)); }//check_tile(i - (row+1)); }
 }
 
 function num_tiles_0(i) {
     var x = 0;
     if ((visib[i - 1]  == "tile")) { x++; }
     if ((visib[i + 1]  == "tile")) { x++; }
-    if ((visib[i + 16] == "tile")) { x++; }
-    if ((visib[i - 16] == "tile")) { x++; }
-    if ((visib[i - 17] == "tile")) { x++; }
-    if ((visib[i + 17] == "tile")) { x++; }
-    if ((visib[i + 15] == "tile")) { x++; }
-    if ((visib[i - 15] == "tile")) { x++; }
+    if ((visib[i + row] == "tile")) { x++; }
+    if ((visib[i - row] == "tile")) { x++; }
+    if ((visib[i - (row+1)] == "tile")) { x++; }
+    if ((visib[i + (row+1)] == "tile")) { x++; }
+    if ((visib[i + (row-1)] == "tile")) { x++; }
+    if ((visib[i - (row-1)] == "tile")) { x++; }
 	
     return x;
 }
@@ -439,33 +446,45 @@ function num_flags_0(i) {
     var x = 0;
     if (document.images[i - 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     if (document.images[i + 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 16].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 17].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 17].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i + 15].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
-    if (document.images[i - 15].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - row].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - (row+1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + (row+1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i + (row-1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
+    if (document.images[i - (row-1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { x++; }
     return x;
 }
 function right_click_0(i) {
     if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 1); }//check_tile(i - 1); }
     if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 1); }//check_tile(i + 1); }
-    if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 16); }//check_tile(i + 16); }
-    if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 16); }//check_tile(i - 16); }
-    if (document.images[i - 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 17); }//check_tile(i - 17); }
-    if (document.images[i + 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 17); }//check_tile(i + 17); }
-    if (document.images[i - 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - 15); }//check_tile(i + 15); }
-    if (document.images[i + 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + 15); }//check_tile(i - 15); }
+    if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - row); }//check_tile(i + row); }
+    if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + row); }//check_tile(i - row); }
+    if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - (row+1)); }//check_tile(i - (row+1)); }
+    if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + (row+1)); }//check_tile(i + (row+1)); }
+    if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i - (row-1)); }//check_tile(i + (row-1)); }
+    if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg") { rightclick(i + (row-1)); }//check_tile(i - (row-1)); }
 }
 
 // Update number of mines on board, start new game
 function change_num_mines() {
-    var num = prompt("Enter number between 1 and 100", num_mines);
-    if (!(num < 1) && !(num > 100)) {
-        num_mines = num;
-        newGame();
-	}
-	
+    var num;
+    var grid = $("#size_chosen").val();
+    if(grid == 16){
+        num = prompt("Enter number between 1 and 100", num_mines);
+        if (!(num < 1) && !(num > 100)) {
+            num_mines = num;
+            newGame();
+    	}
+    }
+    else if(grid == 9){
+        num = prompt("Enter number between 1 and 30", num_mines);
+        if (!(num < 1) && !(num > 30)) {
+            num_mines = num;
+            newGame();
+        }
+    }
+    else{prompt("not working");}
+
 }
 
 // Return number of tiles touching position i

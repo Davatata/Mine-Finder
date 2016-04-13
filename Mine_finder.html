@@ -15,8 +15,8 @@
 
     New game button: will end current game, randomize the board for a new game. 
 -->
-
-<html>
+<!doctype html>
+<html class="no-js" lang="en">
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -28,6 +28,7 @@
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
     </head>
     <body onload="newGame()">
+        <br/>
         <div class="row">
             <div class="small-12 text-center columns">
                 <h1>Minesweeper</h1>
@@ -38,7 +39,8 @@
                 <table id="board" border="0" cellspacing="0" cellpadding="0">
                 </table>
             </div>    
-        </div>       
+        </div> 
+        
         <form NAME="f" id="form_data">
             <div class="row">
                 <div class="small-6  centered columns">
@@ -52,24 +54,55 @@
             </div>
             
             <div class="row">
-                <div class="small-12 medium-4 large-4 columns">
+                <div class="small-12 medium-3 large-3 columns">
                     <a class="button  expanded" onclick="newGame();">New Game</a>
                 </div>
-                <div class="small-12 medium-4 large-4 columns">
+                <div class="small-12 medium-3 large-3 columns">
                     <a class="button  expanded" onclick="change_num_mines();"># Mines</a>
                 </div>
-                <div class="small-12 medium-4 large-4 columns">
+                <div class="small-12 medium-3 large-3 columns">
                     <a class="button  expanded" onclick="solve();">Solve</a>
+                </div>
+                <div class="small-12 medium-3 large-3 columns">
+                    <a class="button  expanded" data-open="change_size">Change Grid</a>
+                    <div class="reveal" id="change_size" data-reveal style="padding:100px 0">
+                        <form id="myform" data-abide novalidate="">
+                            <div class="row">
+                                <div class="small-8 small-centered columns">
+                                    <label><h4>Grid Size</h4>
+                                        <select id="size_chosen" required>
+                                            <option value="9" id="grid_9">9x9</option>
+                                            <option value="16" selected="selected" id="grid_16">16x16</option>
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="small-8 small-centered columns">
+                                    <a id="done_button" onclick="$('#change_size').foundation('close'); changeBoardSize();" class="button expanded" >Done</a>
+                                </div>
+                            </div>
+                        </form>
+                        <button class="close-button" data-close aria-label="Close modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>
+
     <script src="control.js"></script>
     <script src="Solver.js"></script>
     <script>
 
     maketable();
-    controlform();
 
+    </script>
+    <script src="foundation-6/js/vendor/jquery.min.js"></script>
+    <script src="foundation-6/js/vendor/what-input.min.js"></script>
+    <script src="foundation-6/js/foundation.min.js"></script>
+    <script>
+        $(document).foundation();
     </script>
     </body>
 </html>

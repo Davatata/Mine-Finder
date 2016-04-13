@@ -1,15 +1,46 @@
 // Global variables holding game data
 var numflags = 0;
 var num_tiles = 0;
-var num_rows = 16;
-var num_cols = 16;
-var num_mines = 40;
+var num_rows = 9;
+var num_cols = 9;
+var num_mines = 10;
+var rxc = num_rows*num_cols;
+var rxc_1 = rxc-num_rows;
+var row = num_rows;
 var board = new Array(num_rows * num_cols);     // Hidden from player. (0-8, and "mine" initially)
 var visib = new Array(num_rows * num_cols);     // Visible to the player.  (Blank tiles initially)
 var where = new Array(num_rows * num_cols);     // Tells game where the tile is relative to board. (Top, Bottom, 0, Bottomright...)
 var gameover = false;
 var myTimer;
 
+function changeBoardSize(){
+    var width = $("#size_chosen").val();
+    if(width == 9){
+        num_cols = 9;
+        num_rows = 9;
+        num_mines = 10;
+        rxc = num_rows*num_cols;
+        rxc_1 = rxc-num_rows;
+        row = num_rows;
+        board = new Array(num_rows * num_cols);
+        visib = new Array(num_rows * num_cols);
+        where = new Array(num_rows * num_cols);
+    }
+    else if(width == 16){
+        num_cols = 16;
+        num_rows = 16;
+        num_mines = 40;
+        rxc = num_rows*num_cols;
+        rxc_1 = rxc-num_rows;
+        row = num_rows;
+        board = new Array(num_rows * num_cols);
+        visib = new Array(num_rows * num_cols);
+        where = new Array(num_rows * num_cols);
+    }
+
+    maketable();
+    newGame();
+}
 
 // Win  scenario
 function youwin(n) {
@@ -37,12 +68,12 @@ function solve() {
 // This is called if user hasnt clicked any squares yet
 function solver() {
     var squares_clicked = new Array(num_rows * num_cols);
-    for (var i = 0; i < 256; i++)
+    for (var i = 0; i < rxc; i++)
         squares_clicked[i] = 0;
 
     // click randomly until we hit mine or find a zero square
     while (true) {
-        i = Math.floor((Math.random() * 256) + 0); // i ranges from 0-255
+        i = Math.floor((Math.random() * rxc) + 0); // i ranges from 0-255
 
         if (squares_clicked[i] == 1 || touching_number(i)) {
             continue;
@@ -73,10 +104,10 @@ function solver() {
                         if (r == 3) {
                             if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
-                            if (document.images[i + 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 17); squares_clicked[i + 17] = 1; }
+                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + row); squares_clicked[i + row] = 1; }
+                            if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + (row+1)); squares_clicked[i + (row+1)] = 1; }
                         }
                         break;
 
@@ -84,10 +115,10 @@ function solver() {
                         if (r == 3) {
                             if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
-                            if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
-                            if (document.images[i + 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 15); squares_clicked[i + 15] = 1; }
+                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + row); squares_clicked[i + row] = 1; }
+                            if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + (row-1)); squares_clicked[i + (row-1)] = 1; }
 
                         }
 
@@ -97,10 +128,10 @@ function solver() {
                         if (r == 3) {
                             if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
-                            if (document.images[i - 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 15); squares_clicked[i - 15] = 1; }
+                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - row); squares_clicked[i - row] = 1; }
+                            if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - (row-1)); squares_clicked[i - (row-1)] = 1; }
 
                         }
                         break;
@@ -109,10 +140,10 @@ function solver() {
                         if (r == 3) {
                             if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
-                            if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
-                            if (document.images[i - 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 17); squares_clicked[i - 17] = 1; }
+                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - row); squares_clicked[i - row] = 1; }
+                            if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - (row+1)); squares_clicked[i - (row+1)] = 1; }
 
                         }
                         break;
@@ -123,44 +154,44 @@ function solver() {
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
                             if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i + 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 15); squares_clicked[i + 15] = 1; }
-                            if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
-                            if (document.images[i + 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 17); squares_clicked[i + 17] = 1; }
+                            if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + (row-1)); squares_clicked[i + (row-1)] = 1; }
+                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + row); squares_clicked[i + row] = 1; }
+                            if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + (row+1)); squares_clicked[i + (row+1)] = 1; }
 
                         }
                         break;
 
                     case "left":
                         if (r == 5) {
-                            if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
-                            if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
+                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - row); squares_clicked[i - row] = 1; }
+                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + row); squares_clicked[i + row] = 1; }
                             if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i - 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 15); squares_clicked[i - 15] = 1; }
-                            if (document.images[i + 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 17); squares_clicked[i + 17] = 1; }
+                            if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - (row-1)); squares_clicked[i - (row-1)] = 1; }
+                            if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + (row+1)); squares_clicked[i + (row+1)] = 1; }
 
                         }
                         break;
 
                     case "right":
                         if (r == 5) {
-                            if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
-                            if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
+                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - row); squares_clicked[i - row] = 1; }
+                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + row); squares_clicked[i + row] = 1; }
                             if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
-                            if (document.images[i + 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 15); squares_clicked[i + 15] = 1; }
-                            if (document.images[i - 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 17); squares_clicked[i - 17] = 1; }
+                            if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + (row-1)); squares_clicked[i + (row-1)] = 1; }
+                            if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - (row+1)); squares_clicked[i - (row+1)] = 1; }
 
                         }
                         break;
@@ -169,14 +200,14 @@ function solver() {
                         if (r == 5) {
                             if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
-                            if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
+                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - row); squares_clicked[i - row] = 1; }
                             if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i - 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 15); squares_clicked[i - 15] = 1; }
-                            if (document.images[i - 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 17); squares_clicked[i - 17] = 1; }
+                            if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - (row-1)); squares_clicked[i - (row-1)] = 1; }
+                            if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - (row+1)); squares_clicked[i - (row+1)] = 1; }
 
                         }
                         break;
@@ -187,18 +218,18 @@ function solver() {
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
                             if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i + 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 16); squares_clicked[i + 16] = 1; }
-                            if (document.images[i - 16].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 16); squares_clicked[i - 16] = 1; }
-                            if (document.images[i - 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 17); squares_clicked[i - 17] = 1; }
-                            if (document.images[i + 17].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 17); squares_clicked[i + 17] = 1; }
-                            if (document.images[i + 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i + 15); squares_clicked[i + 15] = 1; }
-                            if (document.images[i - 15].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
-                            { rightclick(i - 15); squares_clicked[i - 15] = 1; }
+                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + row); squares_clicked[i + row] = 1; }
+                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - row); squares_clicked[i - row] = 1; }
+                            if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - (row+1)); squares_clicked[i - (row+1)] = 1; }
+                            if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + (row+1)); squares_clicked[i + (row+1)] = 1; }
+                            if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i + (row-1)); squares_clicked[i + (row-1)] = 1; }
+                            if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")
+                            { rightclick(i - (row-1)); squares_clicked[i - (row-1)] = 1; }
 
                         }
                         break;
@@ -214,62 +245,62 @@ function S2(i, e) {
     switch (where[i]) {
         case "topleft":
             if (num_flags_TL(i) == e)
-            { clicky(i + 1); clicky(i + 16); clicky(i + 17); }
+            { clicky(i + 1); clicky(i + row); clicky(i + (row+1)); }
             else if (num_tiles_TL(i) == e)
                 right_click_TL(i);
             break;
         case "topright":
             if (num_flags_TR(i) == e)
-            { clicky(i - 1); clicky(i + 16); clicky(i + 15); }
+            { clicky(i - 1); clicky(i + row); clicky(i + (row-1)); }
             else if (num_tiles_TR(i) == e)
                 right_click_TR(i);
             break;
 
         case "bottomleft":
             if (num_flags_BL(i) == e)
-            { clicky(i + 1); clicky(i - 16); clicky(i - 15); }
+            { clicky(i + 1); clicky(i - row); clicky(i - (row-1)); }
             else if (num_tiles_BL(i) == e)
                 right_click_BL(i);
             break;
 
         case "bottomright":
             if (num_flags_BR(i) == e)
-            { clicky(i - 1); clicky(i - 16); clicky(i - 17); }
+            { clicky(i - 1); clicky(i - row); clicky(i - (row+1)); }
             else if (num_tiles_BR(i) == e)
                 right_click_BR(i);
             break;
 
         case "top":
             if (num_flags_T(i) == e)
-            { clicky(i - 1); clicky(i + 1); clicky(i + 15); clicky(i + 16); clicky(i + 17); }
+            { clicky(i - 1); clicky(i + 1); clicky(i + (row-1)); clicky(i + row); clicky(i + (row+1)); }
             else if (num_tiles_T(i) == e)
                 right_click_T(i);
             break;
 
         case "left":
             if (num_flags_L(i) == e)
-            { clicky(i - 16); clicky(i + 16); clicky(i + 1); clicky(i - 15); clicky(i + 17); }
+            { clicky(i - row); clicky(i + row); clicky(i + 1); clicky(i - (row-1)); clicky(i + (row+1)); }
             else if (num_tiles_L(i) == e)
                 right_click_L(i);
             break;
 
         case "right":
             if (num_flags_R(i) == e)
-            { clicky(i - 16); clicky(i + 16); clicky(i - 1); clicky(i + 15); clicky(i - 17); }
+            { clicky(i - row); clicky(i + row); clicky(i - 1); clicky(i + (row-1)); clicky(i - (row+1)); }
             else if (num_tiles_R(i) == e)
                 right_click_R(i);
             break;
 
         case "bottom":
             if (num_flags_B(i) == e)
-            { clicky(i - 1); clicky(i - 16); clicky(i + 1); clicky(i - 15); clicky(i - 17); }
+            { clicky(i - 1); clicky(i - row); clicky(i + 1); clicky(i - (row-1)); clicky(i - (row+1)); }
             else if (num_tiles_B(i) == e)
                 right_click_B(i);
             break;
 
         case "0":
             if ((num_flags_0(i)) == e)
-            { clicky(i - 1); clicky(i + 1); clicky(i + 16); clicky(i - 16); clicky(i - 17); clicky(i + 17); clicky(i + 15); clicky(i - 15); }
+            { clicky(i - 1); clicky(i + 1); clicky(i + row); clicky(i - row); clicky(i - (row+1)); clicky(i + (row+1)); clicky(i + (row-1)); clicky(i - (row-1)); }
             else if ((num_tiles_0(i)) == e)
                 right_click_0(i);
             break;
@@ -304,7 +335,7 @@ function S1(p) {
     var runs = 0;
     while (gameover == false) {
         var updated = numflags;
-        for (var i = 0; i < 256; i++) {
+        for (var i = 0; i < rxc; i++) {
             check_tile(i);
             find_ones();
         }
@@ -312,7 +343,7 @@ function S1(p) {
         if (numflags == (num_mines - 1)) {
             var tile1 = 0;
             var tile2 = 0;
-            for (var i = 0; i < 256; i++) {
+            for (var i = 0; i < rxc; i++) {
                 if ((visib[i] == "tile") && (document.images[i] != "https://rawgit.com/Davatata/Mine-Finder/master/imgs/flag.svg")) {
                     tile1++;
                     tile2 = i;
@@ -324,7 +355,7 @@ function S1(p) {
 
 
         else if (numflags == num_mines) {
-            for (var i = 0; i < 256; i++) {
+            for (var i = 0; i < rxc; i++) {
                 clicky(i);
             }
             youwin();
@@ -343,35 +374,35 @@ function S1(p) {
 
 // Find  1-1 pairs next to borders
 function find_ones() {
-    for (var i = 0; i < 16; i++) {
-        if ((visib[i] == "1") && (visib[i + 16] == "1")) {
-            if (where[i] == "topleft") { clicky(i + 32); clicky(i + 33); }
-            else if (where[i] == "topright") { clicky(i + 31); clicky(i + 32); }
-            else { clicky(i + 31); clicky(i + 32); clicky(i + 33); }
+    for (var i = 0; i < row; i++) {
+        if ((visib[i] == "1") && (visib[i + row] == "1")) {
+            if (where[i] == "topleft") { clicky(i + (row*2)); clicky(i + ((row*2) + 1)); }
+            else if (where[i] == "topright") { clicky(i + ((row*2) - 1)); clicky(i + (row*2)); }
+            else { clicky(i + ((row*2) - 1)); clicky(i + (row*2)); clicky(i + ((row*2) + 1)); }
         }
     }
 
-    for (var i = 0; i < 241; i = i + 16) {
+    for (var i = 0; i < (rxc - row + 1); i = i + row) {
         if ((visib[i] == "1") && (visib[i + 1] == "1")) {
-            if (where[i] == "topleft") { clicky(i + 2); clicky(i + 18); }
-            else if (where[i] == "bottomleft") { clicky(i + 2); clicky(i - 14); }
-            else { clicky(i - 14); clicky(i + 2); clicky(i + 18); }
+            if (where[i] == "topleft") { clicky(i + 2); clicky(i + (row + 2)); }
+            else if (where[i] == "bottomleft") { clicky(i + 2); clicky(i - (row - 2)); }
+            else { clicky(i - (row - 2)); clicky(i + 2); clicky(i + (row + 2)); }
         }
     }
 
-    for (var i = 15; i < 256; i = i + 16) {
+    for (var i = (row-1); i < rxc; i = i + row) {
         if ((visib[i] == "1") && (visib[i - 1] == "1")) {
-            if (where[i] == "topright") { clicky(i - 2); clicky(i + 14); }
-            else if (where[i] == "bottomright") { clicky(i - 2); clicky(i - 18); }
-            else { clicky(i - 18); clicky(i - 2); clicky(i + 14); }
+            if (where[i] == "topright") { clicky(i - 2); clicky(i + (row - 2)); }
+            else if (where[i] == "bottomright") { clicky(i - 2); clicky(i - (row + 2)); }
+            else { clicky(i - (row + 2)); clicky(i - 2); clicky(i + (row - 2)); }
         }
     }
 
-    for (var i = 240; i < 256; i++) {
-        if ((visib[i] == "1") && (visib[i - 16] == "1")) {
-            if (where[i] == "bottomleft") { clicky(i - 32); clicky(i - 31); }
-            else if (where[i] == "bottomright") { clicky(i - 32); clicky(i - 33); }
-            else { clicky(i - 33); clicky(i - 32); clicky(i - 31); }
+    for (var i = (rxc - row); i < rxc; i++) {
+        if ((visib[i] == "1") && (visib[i - row] == "1")) {
+            if (where[i] == "bottomleft") { clicky(i - (row*2)); clicky(i - ((row*2) - 1)); }
+            else if (where[i] == "bottomright") { clicky(i - (row*2)); clicky(i - ((row*2) + 1)); }
+            else { clicky(i - ((row*2) + 1)); clicky(i - (row*2)); clicky(i - ((row*2) - 1)); }
         }
     }
 }
@@ -393,7 +424,7 @@ function touching_all_tiles(i) {
 }
 
 function guess_a_touching(i) {
-    var pos = [i - 1, i + 1, i + 16, i - 16, i - 17, i + 17, i + 15, i - 15];
+    var pos = [i - 1, i + 1, i + row, i - row, i - (row+1), i + (row+1), i + (row-1), i - (row-1)];
     i = Math.floor((Math.random() * 8) + 0);
     return pos[i];
 }
