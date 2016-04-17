@@ -27,4 +27,9 @@
         L - 30 %               L - 27.5 %
         S - 20 %               S - 45   %
 		
-	
+
+    Added new features:
+    	- keeps track of best time according to grid/# of mines
+    		- score only applies if solver not used
+    	- multiple grid sizes (9x9 and 16x16)
+    	- player wins when only mines are left unopened
