@@ -13,6 +13,7 @@ var where = new Array(num_rows * num_cols);     // Tells game where the tile is 
 var gameover = false;
 var myTimer;
 var solver_tried = false;
+var solver_tried_once = false;
 var open_tiles = 0;
 
 
@@ -119,6 +120,7 @@ function youlose() {
 // Calls solver() if user hasnt clicked, otherwise S1(0)
 function solve() {
     solver_tried = true;
+    solver_tried_once = true;
     if (clicked == false)
         solver();
     else
