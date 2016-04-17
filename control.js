@@ -212,6 +212,7 @@ function clicky(n) {
 			
             document.images[i].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/" + board[i] + ".png";
 		}
+        document.images[n].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/redmine.png";
         youlose();
         return -1;
 	}
