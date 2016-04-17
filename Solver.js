@@ -12,6 +12,7 @@ var visib = new Array(num_rows * num_cols);     // Visible to the player.  (Blan
 var where = new Array(num_rows * num_cols);     // Tells game where the tile is relative to board. (Top, Bottom, 0, Bottomright...)
 var gameover = false;
 var myTimer;
+var exdays = 365;
 var solver_tried = false;
 var solver_tried_once = false;
 var open_tiles = 0;
@@ -78,25 +79,25 @@ function checkTopScore(new_score){
     var old_score = getCookie(cookie_name);
     if(old_score != ""){
         if(old_score > new_score && solver_tried_once == false){
-            createTopScore(cookie_name, new_score);
+            createTopScore(cookie_name, new_score, exdays);
             return true;
         }
         else
             return false;
     }
     else if(solver_tried_once == false){ 
-        createTopScore(cookie_name, new_score);
+        createTopScore(cookie_name, new_score, exdays);
         return true;
     }
     else
         return false;
 }
 
-function createTopScore(s, n){
+function createTopScore(cname,cvalue,exdays) {
     var d = new Date();
-    d.setTime(d.getTime() + (365*24*60*60*1000));
-    var expires = d.toGMTString();
-    document.cookie = s+"="+n+"; "+expires;
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname+"="+cvalue+"; "+expires;
 }
 
 // Win  scenario
