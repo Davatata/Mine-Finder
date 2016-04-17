@@ -119,7 +119,7 @@ function showTopScore(){
     if(old_score == "")
         alert("No score set");
     else
-        alert("Your topscore: " + score);
+        alert("Your best time: " + score);
 }
 
 // Win  scenario
@@ -131,7 +131,7 @@ function youwin(n) {
     var win_time_s = getSeconds(win_time);
     var beatOldScore = checkTopScore(win_time_s);
     if(beatOldScore){
-        alert('You win! New top score: '+win_time+'!');
+        alert('You win! New best time: '+win_time+'!');
     }
     else
         alert('You Win!');
