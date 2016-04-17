@@ -73,17 +73,19 @@ function getCookie(cname) {
 }
 
 function checkTopScore(new_score){
-    var old_score = getCookie("topscore");
+    var size = $("#size_chosen").val();
+    var cookie_name = "topscore"+"/"+size+"/"+num_mines;
+    var old_score = getCookie(cookie_name);
     if(old_score != ""){
         if(old_score > new_score && solver_tried_once == false){
-            createTopScore("topscore", new_score);
+            createTopScore(cookie_name, new_score);
             return true;
         }
         else
             return false;
     }
     else if(solver_tried_once == false){ 
-        createTopScore("topscore", new_score);
+        createTopScore(cookie_name, new_score);
         return true;
     }
     else
@@ -123,6 +125,7 @@ function youlose() {
 function solve() {
     solver_tried = true;
     solver_tried_once = true;
+
     if (clicked == false)
         solver();
     else
