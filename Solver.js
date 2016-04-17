@@ -75,17 +75,19 @@ function getCookie(cname) {
 function checkTopScore(new_score){
     var old_score = getCookie("topscore");
     if(old_score != ""){
-        if(old_score > new_score && solver_tried == false){
+        if(old_score > new_score && solver_tried_once == false){
             createTopScore("topscore", new_score);
             return true;
         }
         else
             return false;
     }
-    else{ 
+    else if(solver_tried_once == false){ 
         createTopScore("topscore", new_score);
         return true;
     }
+    else
+        return false;
 }
 
 function createTopScore(s, n){
