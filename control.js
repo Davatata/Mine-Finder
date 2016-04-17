@@ -5,6 +5,7 @@ function newGame() {
     num_tiles = 0;
     gameover = false;
     clicked = false;
+    solver_tried = false;
     for (var i = 0; i < num_rows * num_cols; i++) {
         visib[i] = "tile";
         board[i] = "0";
