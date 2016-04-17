@@ -1,5 +1,4 @@
 function newGame() {
-    console.log("newgame");
     clock = 0;
     numflags = 0;
     num_tiles = 0;
@@ -193,7 +192,7 @@ function putFlags(){
 }
 
 function stopTime(){
-    console.log("Caution: time has been stopped");
+    //console.log("Caution: time has been stopped");
     clearInterval(myTimer);
 }
 
@@ -263,7 +262,6 @@ function rightclick(n) {
 
 //creates a num_cols*num_rows table using HTML
 function maketable() {
-    console.log("maketable");
     $("#board").html();
     var board_make = '';
     //document.write('<table border="0" cellspacing="0" cellpadding="0">');

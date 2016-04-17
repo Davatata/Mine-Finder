@@ -60,6 +60,17 @@ function getSeconds(str) {
     return s;
 }
 
+function secondsToTime(sec) {
+    var hr = Math.floor(sec / 3600);
+    var min = Math.floor((sec - (hr * 3600))/60);
+    sec -= ((hr * 3600) + (min * 60));
+    sec += ''; min += '';
+    while (min.length < 2) {min = '0' + min;}
+    while (sec.length < 2) {sec = '0' + sec;}
+    hr = (hr)?hr+':':'';
+    return hr + min + ':' + sec;
+}
+
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
@@ -104,10 +115,11 @@ function showTopScore(){
     var size = $("#size_chosen").val();
     var cookie_name = "topscore"+"/"+size+"/"+num_mines;
     var old_score = getCookie(cookie_name);
+    var score = secondsToTime(old_score);
     if(old_score == "")
         alert("No score set");
     else
-        alert("Your topscore: " + old_score);
+        alert("Your topscore: " + score);
 }
 
 // Win  scenario
