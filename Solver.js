@@ -45,11 +45,68 @@ function changeBoardSize(){
     newGame();
 }
 
+// converts time on clock to integer seconds
+function getSeconds(str) {
+    var p = str.split(':'),
+        s = 0, m = 1;
+
+    while (p.length > 0) {
+        s += m * parseInt(p.pop(), 10);
+        m *= 60;
+    }
+
+    return s;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function checkTopScore(new_score){
+    var old_score = getCookie("topscore");
+    if(old_score != ""){
+        if(old_score > new_score){
+            createTopScore("topscore", new_score);
+            return true;
+        }
+        else
+            return false;
+    }
+    else{ 
+        createTopScore("topscore", new_score);
+        return true;
+    }
+}
+
+function createTopScore(s, n){
+    var d = new Date();
+    d.setTime(d.getTime() + (365*24*60*60*1000));
+    var expires = d.toGMTString();
+    document.cookie = s+"="+n+"; "+expires;
+}
+
 // Win  scenario
 function youwin(n) {
     stopTime();
     gameover = true;
-    alert('You Win!');
+
+    var win_time = $("#thetime").val();
+    var win_time_s = getSeconds(win_time);
+    var beatOldScore = checkTopScore(win_time_s);
+    if(beatOldScore){
+        alert('You win! New top score: '+win_time+'!');
+    }
+    else
+        alert('You Win!');
 }
 // Lose scenario
 function youlose() {
@@ -66,6 +123,8 @@ function solve() {
         solver();
     else
         S1(0);
+
+    solver_tried = false;
 }
 
 // This is called if user hasnt clicked any squares yet
