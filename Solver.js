@@ -74,7 +74,7 @@ function getCookie(cname) {
 function checkTopScore(new_score){
     var old_score = getCookie("topscore");
     if(old_score != ""){
-        if(old_score > new_score){
+        if(old_score > new_score && solver_tried == false){
             createTopScore("topscore", new_score);
             return true;
         }
