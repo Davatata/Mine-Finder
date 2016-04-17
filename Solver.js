@@ -100,6 +100,16 @@ function createTopScore(cname,cvalue,exdays) {
     document.cookie = cname+"="+cvalue+"; "+expires;
 }
 
+function showTopScore(){
+    var size = $("#size_chosen").val();
+    var cookie_name = "topscore"+"/"+size+"/"+num_mines;
+    var old_score = getCookie(cookie_name);
+    if(old_score == "")
+        alert("No score set");
+    else
+        alert("Your topscore: " + old_score);
+}
+
 // Win  scenario
 function youwin(n) {
     stopTime();
