@@ -26,6 +26,7 @@ function newGame() {
 	
     var start_time = new Date();
     begin = start_time.getTime();
+    stopTime();
     myTimer = setInterval(function () { updateTimer() }, 1000);
 	
     //call to set up mines
