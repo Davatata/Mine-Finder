@@ -24,14 +24,15 @@
         <title>SweeperSolver</title>
         <link rel="stylesheet" href="foundation-6/css/foundation.css" />
         <link rel="stylesheet" href="mine-finder.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
         <script src="modernizr.js"></script>
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
     </head>
-    <body onload="newGame()">
+    <body id="body" class="bright_screen" onload="newGame()">
         <br/>
         <div class="row" style="margin-top: -20px;">
             <div class="small-6 text-center small-centered columns">
-                <h1>Minesweeper</h1>
+                <h1 id="game_title">Minesweeper</h1>
             </div>
         </div>
         <div class="row align-center" >
@@ -91,6 +92,9 @@
                 </div>
                 <div class="small-6 medium-3 large-2 columns">
                     <a class="button secondary expanded" onclick="showTopScore();">My Best Time</a>
+                </div>
+                <div class="small-2 columns">
+                    <i id="moon" class="fa fa-adjust" onclick="changeScreen();" aria-hidden="true"></i>
                 </div>
             </div>
         </form>

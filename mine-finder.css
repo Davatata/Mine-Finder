@@ -1,3 +1,19 @@
 table tbody td {
     padding: 0px !important;
 }
+
+.dark_screen{
+	background-color: black;
+}
+
+.bright_screen{
+	background-color: white;
+}
+
+.white{
+	color: white;
+}
+
+.black{
+	color: black;
+}

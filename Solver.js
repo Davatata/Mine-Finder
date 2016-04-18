@@ -60,6 +60,36 @@ function getSeconds(str) {
     return s;
 }
 
+function changeScreen(){
+    if($("#body").hasClass("bright_screen")){
+
+        $("#body").removeClass("bright_screen");
+        $("#body").addClass("dark_screen");
+
+        $("label").removeClass("black");
+        $("label").addClass("white");
+
+        $("#moon").removeClass("black");
+        $("#moon").addClass("white");
+
+        $("#game_title").removeClass("black");
+        $("#game_title").addClass("white");
+    }
+    else{
+        $("#body").addClass("bright_screen");
+        $("#body").removeClass("dark_screen");
+
+        $("label").removeClass("white");
+        $("label").addClass("black");
+
+        $("#moon").removeClass("white");
+        $("#moon").addClass("black");
+
+        $("#game_title").removeClass("white");
+        $("#game_title").addClass("black");
+    }
+}
+
 function secondsToTime(sec) {
     var hr = Math.floor(sec / 3600);
     var min = Math.floor((sec - (hr * 3600))/60);
