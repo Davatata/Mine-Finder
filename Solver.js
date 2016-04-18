@@ -69,9 +69,6 @@ function changeScreen(){
         $("label").removeClass("black");
         $("label").addClass("white");
 
-        $("#moon").removeClass("black");
-        $("#moon").addClass("white");
-
         $("#game_title").removeClass("black");
         $("#game_title").addClass("white");
     }
@@ -81,9 +78,6 @@ function changeScreen(){
 
         $("label").removeClass("white");
         $("label").addClass("black");
-
-        $("#moon").removeClass("white");
-        $("#moon").addClass("black");
 
         $("#game_title").removeClass("white");
         $("#game_title").addClass("black");
