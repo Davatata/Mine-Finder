@@ -55,17 +55,17 @@
             
             
             <div class="row">
-                <div class="small-6 medium-3 large-3 columns">
+                <div class="small-12 medium-3 large-2 columns">
                     <a class="button  expanded" onclick="newGame();">New Game</a>
                 </div>
-                <div class="small-6 medium-3 large-3 columns">
-                    <a class="button  expanded" onclick="change_num_mines();"># Mines</a>
+                <div class="small-6 medium-3 large-2 columns">
+                    <a class="button  alert expanded" onclick="change_num_mines();"># Mines</a>
                 </div>
-                <div class="small-6 medium-3 large-3 columns">
-                    <a class="button  expanded" onclick="solve();">Solve</a>
+                <div class="small-6 medium-3 large-2 columns">
+                    <a class="button  success expanded" onclick="solve();">Solve</a>
                 </div>
-                <div class="small-6 medium-3 large-3 columns">
-                    <a class="button  expanded" data-open="change_size">Change Grid</a>
+                <div class="small-6 medium-3 large-2 columns">
+                    <a class="button  warning expanded" data-open="change_size">Change Grid</a>
                     <div class="reveal" id="change_size" data-reveal style="padding:100px 0">
                         <form id="myform" data-abide novalidate="">
                             <div class="row">
@@ -80,7 +80,7 @@
                             </div>
                             <div class="row">
                                 <div class="small-8 small-centered columns">
-                                    <a id="done_button" onclick="$('#change_size').foundation('close'); changeBoardSize();" class="button expanded" >Done</a>
+                                    <a id="done_button" onclick="$('#change_size').foundation('close'); changeBoardSize();" class="button secondary expanded" >Done</a>
                                 </div>
                             </div>
                         </form>
@@ -89,8 +89,8 @@
                         </button>
                     </div>
                 </div>
-                <div class="small-6 medium-3 large-3 columns">
-                    <a class="button expanded" onclick="showTopScore();">My Best Time</a>
+                <div class="small-6 medium-3 large-2 columns">
+                    <a class="button secondary expanded" onclick="showTopScore();">My Best Time</a>
                 </div>
             </div>
         </form>
