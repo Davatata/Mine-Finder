@@ -17,3 +17,7 @@ table tbody td {
 .black{
 	color: black;
 }
+
+.bold{
+	font-weight: bold;
+}
