@@ -6,18 +6,18 @@ function newGame() {
     clicked = false;
     solver_tried = false;
     solver_tried_once = false;
-    
+
     for (var i = 0; i < num_rows * num_cols; i++) {
         visib[i] = "tile";
         board[i] = "0";
         document.images[i].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/" + visib[i] + ".png";
 	}
-	
+
     //set up 40 mines
     for (var i = 0; i < num_mines; i++) {
         board[i] = "mine";
 	}
-	
+
     //randomize the mines
     for (var i = 0; i < num_rows * num_cols; i++) {
         var rand = Math.floor(Math.random() * (i + 1));
@@ -25,24 +25,24 @@ function newGame() {
         board[rand] = board[i];
         board[i] = temp;
 	}
-	
+
     var start_time = new Date();
     begin = start_time.getTime();
     stopTime();
     myTimer = setInterval(function () { updateTimer() }, 1000);
-	
+
     //call to set up mines
     setboard();
-	
+
     document.getElementById("theflags").value = numflags + "/" + num_mines;
 
-    
+
 }
 
 // pause execution
 function sleep(miliseconds) {
 	var currentTime = new Date().getTime();
-	
+
 	while (currentTime + miliseconds >= new Date().getTime()) {
 	}
 }
@@ -56,7 +56,7 @@ function setboard() {
     for (var i = num_rows; i < rxc_1; i += num_rows) where[i] = "left";
     for (var i = (num_rows*2-1); i < rxc-1; i += num_rows) where[i] = "right";
     for (var i = rxc_1+1; i < rxc-1; i++) where[i] = "bottom";
-	
+
     for (var i = 0; i < num_rows * num_cols; i++) {
         if (board[i] == "mine") continue;
         switch (where[i]) {
@@ -69,104 +69,104 @@ function setboard() {
             case "right": board[i] = check(i - row) + check(i + row) + check(i - 1) + check(i + (row-1)) + check(i - (row+1)); break;
             case "bottom": board[i] = check(i - 1) + check(i - row) + check(i + 1) + check(i - (row-1)) + check(i - (row+1)); break;
             case "0": board[i] = check(i - 1) + check(i + 1) + check(i + row) + check(i - row) + check(i - (row+1)) + check(i + (row+1)) + check(i + (row-1)) + check(i - (row-1)); break;
-			
+
 		}
 	}
 }
 
 //if cell contains 0, reveal all neighbors until numbers are reached
 function reveal(n) {
-	
+
     if (board[n] == 0 && (document.images[n].src == "https://rawgit.com/Davatata/Mine-Finder/master/png/tile.png")) {
         document.images[n].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/" + board[n] + ".png"; visib[n] = board[n];
         revealer(n);
-		
+
 	}
-	
+
     else if (board[n] == 0 && (document.images[n].src == "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")) {
         numflags--;
         document.images[n].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/" + board[n] + ".png"; visib[n] = board[n];
         document.getElementById("theflags").value = numflags + "/" + num_mines;
         revealer(n);
-		
+
 	}
     else if (board[n] != "mine" && (document.images[n].src == "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")) {
         numflags--;
         document.images[n].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/" + board[n] + ".png"; visib[n] = board[n];
         document.getElementById("theflags").value = numflags + "/" + num_mines;
-		
+
 	}
-	
-	
-	
+
+
+
     else {
         document.images[n].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/" + board[n] + ".png"; visib[n] = board[n];
 	}
-	
+
 }
 
 function revealer(i) {
     switch (where[i]) {
-        case "topleft": 
-            if(visib[i + 1] == "tile") reveal(i + 1); 
-            if(visib[i + row] == "tile") reveal(i + row);  
-            if(visib[i + (row+1)] == "tile") reveal(i + (row+1));  
+        case "topleft":
+            if(visib[i + 1] == "tile") reveal(i + 1);
+            if(visib[i + row] == "tile") reveal(i + row);
+            if(visib[i + (row+1)] == "tile") reveal(i + (row+1));
             break;
-        case "topright": 
-            if(visib[i - 1] == "tile") reveal(i - 1);  
-            if(visib[i + row] == "tile") reveal(i + row);  
-            if(visib[i + (row-1)] == "tile") reveal(i + (row-1));  
+        case "topright":
+            if(visib[i - 1] == "tile") reveal(i - 1);
+            if(visib[i + row] == "tile") reveal(i + row);
+            if(visib[i + (row-1)] == "tile") reveal(i + (row-1));
             break;
-        case "bottomleft": 
-            if(visib[i + 1] == "tile") reveal(i + 1);  
-            if(visib[i - row] == "tile") reveal(i - row);  
-            if(visib[i - (row-1)] == "tile") reveal(i - (row-1));  
+        case "bottomleft":
+            if(visib[i + 1] == "tile") reveal(i + 1);
+            if(visib[i - row] == "tile") reveal(i - row);
+            if(visib[i - (row-1)] == "tile") reveal(i - (row-1));
             break;
-        case "bottomright": 
-            if(visib[i - 1] == "tile") reveal(i - 1);  
-            if(visib[i - row] == "tile") reveal(i - row);  
-            if(visib[i - (row+1)] == "tile") reveal(i - (row+1));  
+        case "bottomright":
+            if(visib[i - 1] == "tile") reveal(i - 1);
+            if(visib[i - row] == "tile") reveal(i - row);
+            if(visib[i - (row+1)] == "tile") reveal(i - (row+1));
             break;
-        case "top": 
-            if(visib[i - 1] == "tile") reveal(i - 1);  
-            if(visib[i + 1] == "tile")  reveal(i + 1);  
-            if(visib[i + (row-1)] == "tile") reveal(i + (row-1));  
-            if(visib[i + row] == "tile") reveal(i + row);  
-            if(visib[i + (row+1)] == "tile") reveal(i + (row+1));  
+        case "top":
+            if(visib[i - 1] == "tile") reveal(i - 1);
+            if(visib[i + 1] == "tile")  reveal(i + 1);
+            if(visib[i + (row-1)] == "tile") reveal(i + (row-1));
+            if(visib[i + row] == "tile") reveal(i + row);
+            if(visib[i + (row+1)] == "tile") reveal(i + (row+1));
             break;
-        case "left": 
-            if(visib[i - row] == "tile") reveal(i - row);  
-            if(visib[i + row] == "tile") reveal(i + row);  
-            if(visib[i + 1] == "tile") reveal(i + 1);  
-            if(visib[i - (row-1)] == "tile") reveal(i - (row-1));  
-            if(visib[i + (row+1)] == "tile") reveal(i + (row+1));  
+        case "left":
+            if(visib[i - row] == "tile") reveal(i - row);
+            if(visib[i + row] == "tile") reveal(i + row);
+            if(visib[i + 1] == "tile") reveal(i + 1);
+            if(visib[i - (row-1)] == "tile") reveal(i - (row-1));
+            if(visib[i + (row+1)] == "tile") reveal(i + (row+1));
             break;
-        case "right": 
-            if(visib[i - row] == "tile") reveal(i - row);  
-            if(visib[i + row] == "tile") reveal(i + row);  
-            if(visib[i - 1] == "tile") reveal(i - 1);  
-            if(visib[i + (row-1)] == "tile") reveal(i + (row-1));  
-            if(visib[i - (row+1)] == "tile") reveal(i - (row+1));  
+        case "right":
+            if(visib[i - row] == "tile") reveal(i - row);
+            if(visib[i + row] == "tile") reveal(i + row);
+            if(visib[i - 1] == "tile") reveal(i - 1);
+            if(visib[i + (row-1)] == "tile") reveal(i + (row-1));
+            if(visib[i - (row+1)] == "tile") reveal(i - (row+1));
             break;
-        case "bottom": 
-            if(visib[i - 1] == "tile") reveal(i - 1);  
-            if(visib[i - row] == "tile") reveal(i - row);  
-            if(visib[i + 1] == "tile") reveal(i + 1);  
-            if(visib[i - (row-1)] == "tile") reveal(i - (row-1));  
-            if(visib[i - (row+1)] == "tile") reveal(i - (row+1));  
+        case "bottom":
+            if(visib[i - 1] == "tile") reveal(i - 1);
+            if(visib[i - row] == "tile") reveal(i - row);
+            if(visib[i + 1] == "tile") reveal(i + 1);
+            if(visib[i - (row-1)] == "tile") reveal(i - (row-1));
+            if(visib[i - (row+1)] == "tile") reveal(i - (row+1));
             break;
-        case "0": 
-            if(visib[i - 1] == "tile") reveal(i - 1);  
-            if(visib[i + 1] == "tile") reveal(i + 1);  
-            if(visib[i + row] == "tile") reveal(i + row);  
-            if(visib[i - row] == "tile") reveal(i - row);  
-            if(visib[i - (row+1)] == "tile") reveal(i - (row+1));  
-            if(visib[i + (row+1)] == "tile") reveal(i + (row+1));  
-            if(visib[i + (row-1)] == "tile") reveal(i + (row-1));  
-            if(visib[i - (row-1)] == "tile") reveal(i - (row-1));  
+        case "0":
+            if(visib[i - 1] == "tile") reveal(i - 1);
+            if(visib[i + 1] == "tile") reveal(i + 1);
+            if(visib[i + row] == "tile") reveal(i + row);
+            if(visib[i - row] == "tile") reveal(i - row);
+            if(visib[i - (row+1)] == "tile") reveal(i - (row+1));
+            if(visib[i + (row+1)] == "tile") reveal(i + (row+1));
+            if(visib[i + (row-1)] == "tile") reveal(i + (row-1));
+            if(visib[i - (row-1)] == "tile") reveal(i - (row-1));
             break;
         case "mine": break;
-		
+
 	}
 }
 
@@ -203,44 +203,44 @@ function clicky(n) {
     if (gameover == true) { }
     else if (document.images[n].src == "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
 	   return;
-	
+
     else if (board[n] == "mine") {
         for (var i = 0; i < num_rows * num_cols; i++) {
             if (document.images[i].src == "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png" && board[i] != "mine")
 			board[i] = "xflag";
-			
+
             document.images[i].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/" + board[i] + ".png";
 		}
         document.images[n].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/redmine.png";
         youlose();
         return -1;
 	}
-	
-    else if (board[n] == 0)
-    { 
-        reveal(n); 
-        num_tiles++; 
-        if(getTiles() == num_mines){
-            putFlags();
-            youwin();
-        }
-        return visib[n]; 
-    }
-	
-    else { 
-        document.images[n].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/" + board[n] + ".png"; 
-         
-        num_tiles++; 
-        visib[n] = board[n]; 
-        if(getTiles() == num_mines){
-            putFlags();
-            youwin();
-        }
-        return visib[n]; 
-    }
-	
 
-	
+    else if (board[n] == 0)
+    {
+        reveal(n);
+        num_tiles++;
+        if(getTiles() == num_mines){
+            putFlags();
+            youwin();
+        }
+        return visib[n];
+    }
+
+    else {
+        document.images[n].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/" + board[n] + ".png";
+
+        num_tiles++;
+        visib[n] = board[n];
+        if(getTiles() == num_mines){
+            putFlags();
+            youwin();
+        }
+        return visib[n];
+    }
+
+
+
 }
 
 //handle right click to place or remove flags, update flag counter
@@ -249,12 +249,12 @@ function rightclick(n) {
         document.images[n].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/tile.png";
         numflags--;
 	}
-	
+
     else if (document.images[n].src == "https://rawgit.com/Davatata/Mine-Finder/master/png/tile.png") {
         document.images[n].src = "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png";
         numflags++;
 	}
-	
+
     document.getElementById("theflags").value = numflags + "/" + num_mines;
     if ((num_tiles == (rxc - num_mines)) && (numflags == num_mines)) youwin();
     return false;
@@ -265,7 +265,7 @@ function maketable() {
     $("#board").html();
     var board_make = '';
     //document.write('<table border="0" cellspacing="0" cellpadding="0">');
-	
+
     var n = 0;
     for (var i = 0; i < num_rows; i++) {
         //document.write('<tr>');
@@ -275,11 +275,11 @@ function maketable() {
             board_make += '<td><a HREF="" onClick="clicky(' + n + '); return false;" onContextMenu="return rightclick(' + n + '); return false;"><img SRC="https://rawgit.com/Davatata/Mine-Finder/master/png/tile.png"></a></td>';
             n++;
 		}
-		
+
         //document.write('</tr>');
         board_make += '</tr>';
 	}
-	
+
     //document.write('</table>');
     board_make += '</table>';
     $("#board").html(board_make);
@@ -296,16 +296,16 @@ function updateTimer() {
     var t_secs = "";
     var t_min = "";
     var curTime = new Date();
-	
+
     var secs = (curTime.getTime() - begin) / 1000;
     secs = secs.toFixed(0);
-	
+
     var min = 0;
     while (secs >= 60) {
         min++;
         secs = secs - 60;
 	}
-	
+
     if (min < 10)
 	t_min = "0" + min.toString();
     else
@@ -396,7 +396,7 @@ function num_tiles_BR(i) {
     if ((visib[i - 1] == "tile")) { x++; }
     if ((visib[i - row] == "tile")) { x++; }
     if ((visib[i - (row+1)] == "tile")) { x++; }
-	
+
     return x;
 }
 
@@ -405,7 +405,7 @@ function num_flags_BR(i) {
     if (document.images[i - 1].src == "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png") { x++; }
     if (document.images[i - row].src == "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png") { x++; }
     if (document.images[i - (row+1)].src == "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png") { x++; }
-	
+
     return x;
 }
 
@@ -537,7 +537,7 @@ function num_tiles_0(i) {
     if ((visib[i + (row+1)] == "tile")) { x++; }
     if ((visib[i + (row-1)] == "tile")) { x++; }
     if ((visib[i - (row-1)] == "tile")) { x++; }
-	
+
     return x;
 }
 function num_flags_0(i) {
@@ -564,25 +564,33 @@ function right_click_0(i) {
 }
 
 // Update number of mines on board, start new game
+function change_mines_with_input(){
+  num = $("#change_mines_input").val();
+  var grid = $("#size_chosen").val();
+  if(grid == 16){
+    if (!(num < 1) && !(num > 100)) {
+        num_mines = num;
+        newGame();
+    }
+  }
+  else if(grid == 9){
+    if (!(num < 1) && !(num > 30)) {
+        num_mines = num;
+        newGame();
+    }
+  }
+
+}
+
+// Display label depending on grid size
 function change_num_mines() {
-    var num;
     var grid = $("#size_chosen").val();
     if(grid == 16){
-        num = prompt("Enter number between 1 and 100", num_mines);
-        if (!(num < 1) && !(num > 100)) {
-            num_mines = num;
-            newGame();
-    	}
+        $("#mines_number_suggestion").val("Enter number between 1 and 100");
     }
     else if(grid == 9){
-        num = prompt("Enter number between 1 and 30", num_mines);
-        if (!(num < 1) && !(num > 30)) {
-            num_mines = num;
-            newGame();
-        }
+        $("#mines_number_suggestion").val("Enter number between 1 and 30");
     }
-    else{prompt("not working");}
-
 }
 
 // Return number of tiles touching position i
@@ -596,37 +604,37 @@ function count_tiles(i) {
 		var x = num_tiles_TR(i);
 		return x;
 		break;
-		
+
         case "bottomleft":
 		var x = num_tiles_BL(i);
 		return x;
 		break;
-		
+
         case "bottomright":
 		var x = num_tiles_BR(i);
 		return x;
 		break;
-		
+
         case "top":
 		var x = num_tiles_T(i);
 		return x;
 		break;
-		
+
         case "left":
 		var x = num_tiles_L(i);
 		return x;
 		break;
-		
+
         case "right":
 		var x = num_tiles_R(i);
 		return x;
 		break;
-		
+
         case "bottom":
 		var x = num_tiles_B(i);
 		return x;
 		break;
-		
+
         case "0":
 		var x = num_tiles_0(i);
 		return x;
@@ -644,37 +652,37 @@ function touching_number(i) {
 		var x = num_tiles_TR(i);
 		return x != 3;
 		break;
-		
+
         case "bottomleft":
 		var x = num_tiles_BL(i);
 		return x != 3;
 		break;
-		
+
         case "bottomright":
 		var x = num_tiles_BR(i);
 		return x != 3;
 		break;
-		
+
         case "top":
 		var x = num_tiles_T(i);
 		return x != 5;
 		break;
-		
+
         case "left":
 		var x = num_tiles_L(i);
 		return x != 5;
 		break;
-		
+
         case "right":
 		var x = num_tiles_R(i);
 		return x != 5;
 		break;
-		
+
         case "bottom":
 		var x = num_tiles_B(i);
 		return x != 5;
 		break;
-		
+
         case "0":
 		var x = num_tiles_0(i);
 		return x != 8;

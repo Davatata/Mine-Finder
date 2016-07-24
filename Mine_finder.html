@@ -59,7 +59,36 @@
                     <a class="button  expanded" onclick="newGame();">New Game</a>
                 </div>
                 <div class="small-6 medium-3 large-2 columns">
-                    <a class="button  alert expanded" onclick="change_num_mines();"># Mines</a>
+                    <a class="button  alert expanded" onclick="change_num_mines();" data-open="change_mines"># Mines</a>
+                    <div class="reveal" id="change_mines" data-reveal style="padding:100px 0">
+                        <form id="myform" data-abide novalidate="">
+                            <div class="row">
+                                <div class="small-8 small-centered columns">
+                                    <label><h4 id = "mines_number_suggestion">Number of Mines</h4>
+                                        <input id="change_mines_input" type="text" placeholder="40" required pattern="number">
+                                        <span class="form-error">
+                                          Must input number
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="small-8 small-centered columns">
+                                  <div class="row">
+                                    <div class="small-6 columns">
+                                        <button id="change_button_cancel" data-close class="button expanded secondary" type="button">Cancel</button>
+                                    </div>
+                                    <div class="small-6 columns">
+                                        <a id="done_button" onclick="$('#change_size').foundation('close'); change_mines_with_input();" class="button expanded" >Done</a>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </form>
+                        <button class="close-button" data-close aria-label="Close modal" type="button">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="small-6 medium-3 large-2 columns">
                     <a class="button  success expanded" onclick="solve();">Solve</a>
