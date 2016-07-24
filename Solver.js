@@ -66,23 +66,27 @@ function changeScreen(){
         $("#body").removeClass("bright_screen");
         $("#body").addClass("dark_screen");
 
-        // removed since label wasn't showing up
-        //$("label").removeClass("black");
-        //$("label").addClass("white");
+        $("label").removeClass("black");
+        $("label").addClass("white");
 
         $("#game_title").removeClass("black");
         $("#game_title").addClass("white");
+
+        $(".class-reveal").removeClass("bright_screen")
+        $(".class-reveal").addClass("dark_screen")
     }
     else{
         $("#body").addClass("bright_screen");
         $("#body").removeClass("dark_screen");
 
-        // removed since label wasn't showing up
-        //$("label").removeClass("white");
-        //$("label").addClass("black");
+        $("label").removeClass("white");
+        $("label").addClass("black");
 
-        $("#game_title").removeClass("white");
-        $("#game_title").addClass("black");
+        $("#game_title").removeClass("bright_screen");
+        $("#game_title").addClass("dark_screen");
+
+        $(".class-reveal").removeClass("dark_screen")
+        $(".class-reveal").addClass("bright_screen")
     }
 }
 
