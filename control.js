@@ -586,10 +586,10 @@ function change_mines_with_input(){
 function change_num_mines() {
     var grid = $("#size_chosen").val();
     if(grid == 16){
-        $("#mines_number_suggestion").val("Enter number between 1 and 100");
+        $("#mines_number_suggestion").text("Enter number (1 - 100)");
     }
     else if(grid == 9){
-        $("#mines_number_suggestion").val("Enter number between 1 and 30");
+        $("#mines_number_suggestion").text("Enter number (1 - 30)");
     }
 }
 
