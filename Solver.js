@@ -66,8 +66,9 @@ function changeScreen(){
         $("#body").removeClass("bright_screen");
         $("#body").addClass("dark_screen");
 
-        $("label").removeClass("black");
-        $("label").addClass("white");
+        // removed since label wasn't showing up
+        //$("label").removeClass("black");
+        //$("label").addClass("white");
 
         $("#game_title").removeClass("black");
         $("#game_title").addClass("white");
