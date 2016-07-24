@@ -72,8 +72,8 @@ function changeScreen(){
         $("#game_title").removeClass("black");
         $("#game_title").addClass("white");
 
-        $(".class-reveal").removeClass("bright_screen")
-        $(".class-reveal").addClass("dark_screen")
+        $(".reveal").removeClass("bright_screen")
+        $(".reveal").addClass("dark_screen")
     }
     else{
         $("#body").addClass("bright_screen");
