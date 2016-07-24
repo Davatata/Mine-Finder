@@ -16,7 +16,7 @@ var exdays = 365;
 var solver_tried = false;
 var solver_tried_once = false;
 var open_tiles = 0;
-
+// Why is github so difficult -_-
 
 function changeBoardSize(){
     var width = $("#size_chosen").val();
@@ -76,8 +76,9 @@ function changeScreen(){
         $("#body").addClass("bright_screen");
         $("#body").removeClass("dark_screen");
 
-        $("label").removeClass("white");
-        $("label").addClass("black");
+        // removed since label wasn't showing up
+        //$("label").removeClass("white");
+        //$("label").addClass("black");
 
         $("#game_title").removeClass("white");
         $("#game_title").addClass("black");
@@ -120,7 +121,7 @@ function checkTopScore(new_score){
         else
             return false;
     }
-    else if(solver_tried_once == false){ 
+    else if(solver_tried_once == false){
         createTopScore(cookie_name, new_score, exdays);
         return true;
     }
@@ -204,7 +205,7 @@ function solver() {
                 S1(i);
                 break;
             }
-            
+
             else if (r == 1) {
                 if (where[i] == "0") {
                     if (touching_all_tiles(i)) {
@@ -356,7 +357,7 @@ function solver() {
 }
 
 // Check number of flags being touched by position i
-// Check number of tiles touching position i 
+// Check number of tiles touching position i
 function S2(i, e) {
     switch (where[i]) {
         case "topleft":
