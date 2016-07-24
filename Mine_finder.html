@@ -5,15 +5,15 @@
     The game can be played without the solver.
 
     To run the game, open the file in your browser and start playing.
-    Tested only on Chrome and Mozilla. 
+    Tested only on Chrome and Mozilla.
 
-    Solve button: will attempt to solve the game. 
+    Solve button: will attempt to solve the game.
         It will either solve, lose, or get stuck
 
     #Mines button: will let you change the number of mines. (1 <= n <= 100 ).
         It will start a new game after change.
 
-    New game button: will end current game, randomize the board for a new game. 
+    New game button: will end current game, randomize the board for a new game.
 -->
 <!doctype html>
 <html class="no-js" lang="en">
@@ -42,18 +42,18 @@
             <div class="small-4  column">
                 <label class="bold">Time: </label>
                 <input TYPE="text" ID="thetime"  NAME="time"  SIZE="6" VALUE="" readonly onContextMenu="return false;">
-            </div> 
+            </div>
         </div>
         <div class="row">
             <div class="small-12 medium-8 large-6 centered columns">
                 <table id="board" border="0" cellspacing="0" cellpadding="0">
                 </table>
-            </div>    
-        </div> 
-        
+            </div>
+        </div>
+
         <form NAME="f" id="form_data">
-            
-            
+
+
             <div class="row">
                 <div class="small-12 medium-3 large-2 columns">
                     <a class="button  expanded" onclick="newGame();">New Game</a>
@@ -79,7 +79,10 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="small-8 small-centered columns">
+                                <div class="small-6 small-centered columns">
+                                    <a id="done_button" onclick="$('#change_size').foundation('close'); changeBoardSize();" class="button secondary expanded" >Done</a>
+                                </div>
+                                <div class="small-6 small-centered columns">
                                     <a id="done_button" onclick="$('#change_size').foundation('close'); changeBoardSize();" class="button secondary expanded" >Done</a>
                                 </div>
                             </div>
@@ -110,4 +113,3 @@
     </script>
     </body>
 </html>
-   
