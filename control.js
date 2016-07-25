@@ -585,13 +585,14 @@ function change_mines_with_input(){
 // Display label depending on grid size
 function change_num_mines() {
     var grid = $("#size_chosen").val();
-    $( "#change_mines_input" ).focus();
+
     if(grid == 16){
         $("#mines_number_suggestion").text("Enter number (1 - 100)");
     }
     else if(grid == 9){
         $("#mines_number_suggestion").text("Enter number (1 - 30)");
     }
+    $( "#change_mines_input" ).focus();
 }
 
 // Return number of tiles touching position i
