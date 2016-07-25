@@ -33,3 +33,11 @@ body {
 .bet_fail{
 	background-color: lightpink;
 }
+
+.dark_fail{
+  background-color: #380303;
+}
+
+.dark_success{
+  background-color: #012b01;
+}

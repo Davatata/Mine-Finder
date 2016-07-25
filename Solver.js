@@ -170,8 +170,15 @@ function youwin(n) {
         display = 'You win!';
 
     // show the modal
-    $("#game_over_modal").removeClass('bet_fail');
-    $("#game_over_modal").addClass('bet_success');
+    if($("#body").hasClass("bright_screen")){
+      $("#game_over_modal").removeClass();
+      $("#game_over_modal").addClass('bet_success reveal');
+    }
+    else {
+      $("#game_over_modal").removeClass();
+      $("#game_over_modal").addClass('dark_success reveal');
+    }
+
     $("#game_over_span").text(display);
     $('#game_over_modal').foundation('open');
 }
@@ -183,8 +190,15 @@ function youlose() {
     else display = 'You Lose.';
 
     // show the modal
-    $("#game_over_modal").addClass('bet_fail');
-    $("#game_over_modal").removeClass('bet_success');
+    if($("#body").hasClass("bright_screen")){
+      $("#game_over_modal").removeClass();
+      $("#game_over_modal").addClass('bet_fail reveal');
+    }
+    else {
+      $("#game_over_modal").removeClass();
+      $("#game_over_modal").addClass('dark_fail reveal');
+    }
+
     $("#game_over_span").text(display);
     $('#game_over_modal').foundation('open');
 }
