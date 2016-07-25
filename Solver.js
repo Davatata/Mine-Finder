@@ -169,15 +169,14 @@ function youwin(n) {
     else
         display = 'You win!';
 
+    $("#game_over_modal").removeClass();
+    
     // show the modal
-    if($("#body").hasClass("bright_screen")){
-      $("#game_over_modal").removeClass();
+    if($("#body").hasClass("bright_screen"))
       $("#game_over_modal").addClass('bet_success reveal');
-    }
-    else {
-      $("#game_over_modal").removeClass();
+
+    else
       $("#game_over_modal").addClass('dark_success reveal');
-    }
 
     $("#game_over_span").text(display);
     $('#game_over_modal').foundation('open');
