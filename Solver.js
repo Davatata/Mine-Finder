@@ -186,6 +186,14 @@ function youlose() {
     $('#game_over_modal').foundation('open');
 }
 
+function you_stuck() {
+  // show the modal
+  $("#game_over_modal").removeClass('bet_fail');
+  $("#game_over_modal").removeClass('bet_success');
+  $("#game_over_span").text("Stuck!");
+  $('#game_over_modal').foundation('open');
+}
+
 // Calls solver() if user hasnt clicked, otherwise S1(0)
 function solve() {
     solver_tried = true;
@@ -498,7 +506,7 @@ function S1(p) {
         if (updated == numflags) {
             runs += 1;
             if (runs > 4) {
-                alert("Stuck!");
+                you_stuck();
                 break;
             }
         }
