@@ -2,6 +2,10 @@ table tbody td {
     padding: 0px !important;
 }
 
+body {
+  line-height: 0px
+}
+
 .dark_screen{
 	background-color: black;
 }
