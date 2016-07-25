@@ -205,8 +205,15 @@ function youlose() {
 
 function you_stuck() {
   // show the modal
-  $("#game_over_modal").removeClass('bet_fail');
-  $("#game_over_modal").removeClass('bet_success');
+  $("#game_over_modal").removeClass();
+
+  if($("#body").hasClass("bright_screen")){
+    $("#game_over_modal").addClass('bright_screen reveal');
+  }
+  else {
+    $("#game_over_modal").addClass('dark_screen reveal');
+  }
+
   $("#game_over_span").text("Stuck!");
   $('#game_over_modal').foundation('open');
 }
