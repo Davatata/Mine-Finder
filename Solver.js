@@ -161,17 +161,29 @@ function youwin(n) {
     var win_time_s = getSeconds(win_time);
     var beatOldScore = checkTopScore(win_time_s);
     if(beatOldScore){
-        alert('You win! New best time: '+win_time+'!');
+        display = 'You win! New best time: '+win_time+'!';
     }
     else
-        alert('You Win!');
+        display = 'You win!';
+
+    // show the modal
+    $("#game_over_modal").removeClass('bet_fail');
+    $("#game_over_modal").addClass('bet_success');
+    $("#game_over_span").text(display);
+    $('#game_over_modal').foundation('open');
 }
 // Lose scenario
 function youlose() {
     stopTime();
     gameover = true;
-    if (num_tiles == 0) alert('You Lose. Bad Luck.');
-    else alert('You Lose');
+    if (num_tiles == 0) display = 'You Lose. Bad Luck.';
+    else display = 'You Lose.';
+
+    // show the modal
+    $("#game_over_modal").addClass('bet_fail');
+    $("#game_over_modal").removeClass('bet_success');
+    $("#game_over_span").text(display);
+    $('#game_over_modal').foundation('open');
 }
 
 // Calls solver() if user hasnt clicked, otherwise S1(0)
