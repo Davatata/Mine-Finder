@@ -147,7 +147,7 @@ function showTopScore(){
     var old_score = getCookie(cookie_name);
     var score = secondsToTime(old_score);
     if(old_score == "")
-        display = "No score set";
+        display = "No best time yet.";
     else
         display = "Your best time: " + score;
 
