@@ -147,9 +147,12 @@ function showTopScore(){
     var old_score = getCookie(cookie_name);
     var score = secondsToTime(old_score);
     if(old_score == "")
-        alert("No score set");
+        display = "No score set";
     else
-        alert("Your best time: " + score);
+        display = "Your best time: " + score;
+
+    $("#best_time_display").text(display);
+    $('#best_time_display').foundation('open');
 }
 
 // Win  scenario
