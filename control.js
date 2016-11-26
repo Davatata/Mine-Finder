@@ -691,3 +691,13 @@ function touching_number(i) {
 		break;
 	}
 }
+
+function confirmNewGame(){
+  if (!gameover){
+    if (confirm('Are you sure? Progress will be lost.')) {
+        newGame();
+    }
+  } else {
+    newGame();
+  }
+}
