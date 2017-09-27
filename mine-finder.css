@@ -6,6 +6,10 @@ body {
   line-height: 0px
 }
 
+#game_title:hover {
+	cursor: pointer;
+}
+
 .dark_screen{
 	background-color: black;
 }
