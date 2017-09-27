@@ -33,3 +33,7 @@
     		- score only applies if solver not used
     	- multiple grid sizes (9x9 and 16x16)
     	- player wins when only mines are left unopened
+
+<p align="left">
+  <img src="minesweeper_pic.png" />
+</p>
