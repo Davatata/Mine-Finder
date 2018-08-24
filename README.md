@@ -35,5 +35,5 @@
     	- player wins when only mines are left unopened
 
 <p align="left">
-  <img src="minesweeper_pic.png" />
+  <img src="minefinder.png" />
 </p>
