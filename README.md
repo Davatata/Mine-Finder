@@ -1,4 +1,4 @@
-    This program is a minesweeper game with a solver added to it.
+    This program is a minesweeper game clone with a solver added to it.
     The game can be played without the solver.
 
     To run the game, open the file in your browser and start playing.
