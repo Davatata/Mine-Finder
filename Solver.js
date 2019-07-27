@@ -17,9 +17,7 @@ var solver_tried = false;
 var solver_tried_once = false;
 var open_tiles = 0;
 
-var pngFolder = "https://rawgit.com/Davatata/Mine-Finder/master/png/";
-var flagImage =  pngFolder + "flag.png";
-var tileImage = "";
+var pngFolder = "png/";
 // Why is github so difficult -_-
 
 function changeBoardSize(){
@@ -249,7 +247,7 @@ function solver() {
         }
         else {
             squares_clicked[i] = 1;
-            var r = clicky(i);                    // r ranges from (-1, 0, ... , 8) to represent (losing, blank, ... , 8)
+            var r = clicky(i);  // r ranges from (-1, 0, ... , 8) to represent (losing, blank, ... , 8)
 
 
             if (r == 0) {
@@ -576,8 +574,6 @@ function find_ones() {
     }
 }
 
-
-
 // Take guess
 function guess_one(i) {
     if (where[i] == "0") {
@@ -599,5 +595,5 @@ function guess_a_touching(i) {
 }
 
 function notFlagImage(src) {
-    return src != flagImage;
+    return src != pngFolder + "flag.png";;
 }
