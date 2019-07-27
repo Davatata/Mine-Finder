@@ -267,22 +267,22 @@ function solver() {
                 switch (where[i]) {
                     case "topleft":
                         if (r == 3) {
-                            if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + 1].src))
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + row].src))
                             { rightclick(i + row); squares_clicked[i + row] = 1; }
-                            if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + (row+1)].src))
                             { rightclick(i + (row+1)); squares_clicked[i + (row+1)] = 1; }
                         }
                         break;
 
                     case "topright":
                         if (r == 3) {
-                            if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - 1].src))
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
-                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + row].src))
                             { rightclick(i + row); squares_clicked[i + row] = 1; }
-                            if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + (row-1)].src))
                             { rightclick(i + (row-1)); squares_clicked[i + (row-1)] = 1; }
 
                         }
@@ -291,11 +291,11 @@ function solver() {
 
                     case "bottomleft":
                         if (r == 3) {
-                            if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + 1].src))
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - row].src))
                             { rightclick(i - row); squares_clicked[i - row] = 1; }
-                            if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - (row-1)].src))
                             { rightclick(i - (row-1)); squares_clicked[i - (row-1)] = 1; }
 
                         }
@@ -303,11 +303,11 @@ function solver() {
 
                     case "bottomright":
                         if (r == 3) {
-                            if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - 1].src))
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
-                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - row].src))
                             { rightclick(i - row); squares_clicked[i - row] = 1; }
-                            if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - (row+1)].src))
                             { rightclick(i - (row+1)); squares_clicked[i - (row+1)] = 1; }
 
                         }
@@ -315,15 +315,15 @@ function solver() {
 
                     case "top":
                         if (r == 5) {
-                            if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - 1].src))
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
-                            if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + 1].src))
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + (row-1)].src))
                             { rightclick(i + (row-1)); squares_clicked[i + (row-1)] = 1; }
-                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + row].src))
                             { rightclick(i + row); squares_clicked[i + row] = 1; }
-                            if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + (row+1)].src))
                             { rightclick(i + (row+1)); squares_clicked[i + (row+1)] = 1; }
 
                         }
@@ -331,15 +331,15 @@ function solver() {
 
                     case "left":
                         if (r == 5) {
-                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - row].src))
                             { rightclick(i - row); squares_clicked[i - row] = 1; }
-                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + row].src))
                             { rightclick(i + row); squares_clicked[i + row] = 1; }
-                            if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + 1].src))
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - (row-1)].src))
                             { rightclick(i - (row-1)); squares_clicked[i - (row-1)] = 1; }
-                            if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + (row+1)].src))
                             { rightclick(i + (row+1)); squares_clicked[i + (row+1)] = 1; }
 
                         }
@@ -347,15 +347,15 @@ function solver() {
 
                     case "right":
                         if (r == 5) {
-                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - row].src))
                             { rightclick(i - row); squares_clicked[i - row] = 1; }
-                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + row].src))
                             { rightclick(i + row); squares_clicked[i + row] = 1; }
-                            if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - 1].src))
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
-                            if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + (row-1)].src))
                             { rightclick(i + (row-1)); squares_clicked[i + (row-1)] = 1; }
-                            if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - (row+1)].src))
                             { rightclick(i - (row+1)); squares_clicked[i - (row+1)] = 1; }
 
                         }
@@ -363,15 +363,15 @@ function solver() {
 
                     case "bottom":
                         if (r == 5) {
-                            if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - 1].src))
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
-                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - row].src))
                             { rightclick(i - row); squares_clicked[i - row] = 1; }
-                            if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + 1].src))
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - (row-1)].src))
                             { rightclick(i - (row-1)); squares_clicked[i - (row-1)] = 1; }
-                            if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - (row+1)].src))
                             { rightclick(i - (row+1)); squares_clicked[i - (row+1)] = 1; }
 
                         }
@@ -379,21 +379,21 @@ function solver() {
 
                     case "0":
                         if (r == 8) {
-                            if (document.images[i - 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - 1].src))
                             { rightclick(i - 1); squares_clicked[i - 1] = 1; }
-                            if (document.images[i + 1].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + 1].src))
                             { rightclick(i + 1); squares_clicked[i + 1] = 1; }
-                            if (document.images[i + row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + row].src))
                             { rightclick(i + row); squares_clicked[i + row] = 1; }
-                            if (document.images[i - row].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - row].src))
                             { rightclick(i - row); squares_clicked[i - row] = 1; }
-                            if (document.images[i - (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - (row+1)].src))
                             { rightclick(i - (row+1)); squares_clicked[i - (row+1)] = 1; }
-                            if (document.images[i + (row+1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + (row+1)].src))
                             { rightclick(i + (row+1)); squares_clicked[i + (row+1)] = 1; }
-                            if (document.images[i + (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i + (row-1)].src))
                             { rightclick(i + (row-1)); squares_clicked[i + (row-1)] = 1; }
-                            if (document.images[i - (row-1)].src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")
+                            if (notFlagImage(document.images[i - (row-1)].src))
                             { rightclick(i - (row-1)); squares_clicked[i - (row-1)] = 1; }
 
                         }
@@ -509,7 +509,7 @@ function S1(p) {
             var tile1 = 0;
             var tile2 = 0;
             for (var i = 0; i < rxc; i++) {
-                if ((visib[i] == "tile") && (document.images[i] != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png")) {
+                if ((visib[i] == "tile") && (notFlagImage(document.images[i]))) {
                     tile1++;
                     tile2 = i;
                 }
@@ -592,4 +592,8 @@ function guess_a_touching(i) {
     var pos = [i - 1, i + 1, i + row, i - row, i - (row+1), i + (row+1), i + (row-1), i - (row-1)];
     i = Math.floor((Math.random() * 8) + 0);
     return pos[i];
+}
+
+function notFlagImage(src) {
+    return src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png";
 }
