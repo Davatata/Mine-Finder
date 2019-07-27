@@ -16,6 +16,10 @@ var exdays = 365;
 var solver_tried = false;
 var solver_tried_once = false;
 var open_tiles = 0;
+
+var pngFolder = "https://rawgit.com/Davatata/Mine-Finder/master/png/";
+var flagImage =  pngFolder + "flag.png";
+var tileImage = "";
 // Why is github so difficult -_-
 
 function changeBoardSize(){
@@ -595,5 +599,5 @@ function guess_a_touching(i) {
 }
 
 function notFlagImage(src) {
-    return src != "https://rawgit.com/Davatata/Mine-Finder/master/png/flag.png";
+    return src != flagImage;
 }
